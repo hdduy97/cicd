@@ -5,7 +5,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: ls -la
+      - name: Clone git
+        run: echo ${{ github }}
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
@@ -22,6 +23,3 @@ jobs:
           SSH_USER: ${{ secrets.USER }}
           SSH_KEY: ${{ secrets.KEY }}
           SSH_HOST: ${{ secrets.HOST }}
-
-      - name: Create index.php
-        run: ssh lightsail 'rm /var/www/html/index.php'
