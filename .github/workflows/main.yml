@@ -6,7 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone git
-        run: echo "${{ github.ref }}"
+        run: git clone https://$GIT_USERNAME:$GIT_PASSWORD@github.com/hdduy97/cicd.git
+        env:
+          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+          GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+      - run: ls -la
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
