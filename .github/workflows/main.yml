@@ -26,4 +26,4 @@ jobs:
       - name: Deploy to lightsail
         run: |
           rm -r cicd/.github
-          scp cicd/* lightsail:/var/www/html
+          scp -R cicd/* lightsail:/var/www/html
