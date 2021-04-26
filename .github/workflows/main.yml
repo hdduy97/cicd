@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone git
-        run: echo "${{ github.base_ref }}"
+        run: echo "${{ github.ref }}"
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
