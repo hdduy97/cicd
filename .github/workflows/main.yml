@@ -5,6 +5,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - run: ls -la
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
