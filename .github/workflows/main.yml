@@ -25,5 +25,5 @@ jobs:
           SSH_HOST: ${{ secrets.HOST }}
       - name: Deploy to lightsail
         run: |
-          rm -r cicde/.github
+          rm -r cicd/.github
           scp cicd/* lightsail:/var/www/html
