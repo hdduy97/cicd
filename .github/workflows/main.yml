@@ -5,11 +5,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          date > generated.txt
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "generated"
-          git push
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/lightsail.key
+          chmod 600 ~/.ssh/lightsail.key
+          cat >>~/.ssh/config <<END
+          Host lightsail
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/lightsail.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.USER }}
+          SSH_KEY: ${{ secrets.KEY }}
+          SSH_HOST: ${{ secrets.HOST }}
+
+      - name: Create index.php
+        run: touch /var/www/html/index.php
