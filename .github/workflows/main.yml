@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ github.ref }}
-      - name: Clone git
+      - name: Clone
         run: git clone https://github.com/hdduy97/cicd.git
       - name: Configure SSH
         run: |
