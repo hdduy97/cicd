@@ -1,11 +1,14 @@
 name: CI
 
-on: push
+on: 
+  push:
+    branches:
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ github.ref == '**/**/**' }}
+      - run: echo ${{ github.ref }}
       - name: Clone git
         run: git clone https://github.com/hdduy97/cicd.git
       - name: Configure SSH
