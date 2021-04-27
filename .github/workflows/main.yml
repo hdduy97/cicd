@@ -5,7 +5,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ github.ref == '**/**/mas*' }}
+      - run: echo ${{ github.ref }} == '**/**/mas*'
       - name: Clone git
         run: git clone https://github.com/hdduy97/cicd.git
       - name: Configure SSH
