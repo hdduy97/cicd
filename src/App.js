@@ -1,15 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const App = () => {
-  const [count, setCount] = useState(0)
+  const [posts, setPosts] = useState([])
 
-  const onClick = async () => setCount(count + 1)
+  const postsRender = posts.map(post => (
+    <li key={post.id}>
+      <p>{post.title}</p>
+      <p>{post.body}</p>
+    </li>
+  ))
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const { data } = await axios.get('https://jsonplaceholder.typicode.com/posts')
+    
+        setPosts(data)
+      } catch(e) {
+        alert(e.response.data.message)
+      }
+    }
+
+    fetchPosts()
+  }, [])
 
   return (
     <div>
-      <div>Count: {count}</div>
-      <div className="double-count">Double count: {count * 2 }</div>
-      <button onClick={onClick}>Increase count</button>
+      <ul>
+        {postsRender}
+      </ul>
     </div>
   )
 }
