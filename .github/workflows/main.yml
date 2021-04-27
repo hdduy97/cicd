@@ -5,7 +5,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+      - run: echo ${{ github.ref | cut -d'/' -f3 }}
       - name: Clone git
         run: git clone https://github.com/hdduy97/cicd.git
       - name: Configure SSH
