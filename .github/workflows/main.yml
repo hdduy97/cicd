@@ -9,6 +9,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: ls -la
       - uses: actions/checkout@v2
-      - run: ls -la
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/lightsail.key
+          chmod 600 ~/.ssh/lightsail.key
+          cat >>~/.ssh/config <<END
+          Host lightsail
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/lightsail.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.USER }}
+          SSH_KEY: ${{ secrets.KEY }}
+          SSH_HOST: ${{ secrets.HOST }}
+      - name: Deploy to lightsail
+        run: |
+          rm -r .github .git
+          scp -r ./* lightsail:/var/www/html
