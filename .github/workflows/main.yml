@@ -15,6 +15,7 @@ jobs:
         with:
           node-version: '14'
       - run: npm i
+      - run: npm run build
       - run: ls -la
       - name: Configure SSH
         run: |
@@ -33,6 +34,4 @@ jobs:
           SSH_KEY: ${{ secrets.KEY }}
           SSH_HOST: ${{ secrets.HOST }}
       - name: Deploy to lightsail
-        run: |
-          rm -r .github .git
-          scp -r ./* lightsail:/var/www/html
+        run: scp -r build lightsail:/var/www/html
