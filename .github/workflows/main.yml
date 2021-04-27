@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: '14'
       - run: npm i
-      - run: npm run build
+      - run: CI=false npm run build
       - run: ls -la
       - name: Configure SSH
         run: |
