@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import './navigation.css'
+import './navigation.scss'
 
 import NavigationItems from './navigationItems'
 
@@ -12,8 +12,6 @@ const Navigation = () => {
     const fetchCategories = async () => {
       const { data } = await axios.get(process.env.REACT_APP_RESTURL + '/categories')
 
-      console.log(data)
-
       setCategories(data.children_data)
     }
 
@@ -21,14 +19,14 @@ const Navigation = () => {
   }, [])
 
   const categoriesRender = categories.map(category => {
-      return (
-        <NavigationItems 
-          category={category}
-          key={category.id}
-          hoverCategories={hoverCategories}
-          setHoverCategories={setHoverCategories}
-        />
-      )
+    return (
+      <NavigationItems 
+        category={category}
+        key={category.id}
+        hoverCategories={hoverCategories}
+        setHoverCategories={setHoverCategories}
+      />
+    )
   })
 
   return (

@@ -1,11 +1,13 @@
 import React from 'react'
 import Navigation from './navigation'
+import Panel from './panel'
 
 const Header = () => {
   return (
-    <React.Fragment>
+    <header className="page-header">
+      <Panel />
       <Navigation />
-    </React.Fragment>
+    </header>
   )
 }
 

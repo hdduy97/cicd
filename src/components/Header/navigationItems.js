@@ -29,7 +29,7 @@ const NavigationItems = ({ category, hoverCategories, setHoverCategories }) => {
           onMouseEnter={() => onItemEnter(category)}
           onMouseLeave={() => onItemLeave(category)}
         >
-          <a href="#">
+          <a href={`/${category.id}`}>
             <span>{category.name}</span>
           </a>
           <ul className={`children-category level-${category.level}`}>
@@ -47,7 +47,7 @@ const NavigationItems = ({ category, hoverCategories, setHoverCategories }) => {
           onMouseEnter={() => onItemEnter(category)}
           onMouseLeave={() => onItemLeave(category)}
         >
-          <a href="#">
+          <a href={`/${category.id}`}>
             <span>{category.name}</span>
           </a>
         </li>
