@@ -5,10 +5,10 @@ import GlobalMessage from './components/globalMessage'
 
 const App = () => {
   return (
-    <React.Fragment>
+    <>
       <Header />
       <GlobalMessage />
-    </React.Fragment>
+    </>
   )
 }
 

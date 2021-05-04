@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import LoginForm from './loginForm'
 import CreateForm from './createForm'
 import PopupBlock from '../popupBlock'
@@ -9,6 +11,7 @@ import './panel.scss'
 const Panel = () => {
   const [showLoginForm, setShowLoginForm] = useState(false)
   const [showCreateFrom, setShowCreateForm] = useState(false)
+  const [showCustomerDropdown, setShowCustomerDropdown] = useState(false)
   const accountDropdown = false && 
   (
     <ul className="header dropdown">
@@ -19,6 +22,8 @@ const Panel = () => {
   )
   
   const customer = useSelector(state => state.customer)
+
+  const dispatch = useDispatch()
 
   const loginFormRender = showLoginForm && 
   (
@@ -34,11 +39,36 @@ const Panel = () => {
     </PopupBlock>
   )
 
-  const headerLinksCustomer = (
-    <span>Welcome, {customer.firstname} {customer.lastname}!</span>
+  const signOut = () => {
+    setShowCustomerDropdown(false)
+    dispatch({ type: 'RESET_TOKEN' })
+    dispatch({ type: 'RESET_CUSTOMER' })
+  }
+
+  const headerCustomerDropdown = (
+    <>
+      <span><FontAwesomeIcon icon={faChevronUp} /></span>
+      <PopupBlock setShowComponent={setShowCustomerDropdown}>
+        <ul className="header dropdown">
+          <li>Account</li>
+          <li>My Wish List</li>
+          <li onClick={signOut}>Sign Out</li>
+        </ul>
+      </PopupBlock>
+    </>
   )
 
-  const headerLinksGuest = (
+  const headerCustomer = (
+    <div>
+      <span>Welcome, {customer.firstname} {customer.lastname}! </span>
+      {showCustomerDropdown 
+        ? headerCustomerDropdown 
+        : <span><FontAwesomeIcon onClick={() => setShowCustomerDropdown(!showCustomerDropdown)} icon={faChevronDown} /></span>
+      }
+    </div>
+  )
+
+  const headerGuest = (
     <ul className="header links">
       <li className="account-action">
         <span onClick={() => setShowLoginForm(true)}>Log In</span>
@@ -52,12 +82,12 @@ const Panel = () => {
     </ul>
   )
 
-  const headerLinks = customer.id ? headerLinksCustomer : headerLinksGuest
+  const header = customer.id ? headerCustomer : headerGuest
 
   return (
     <div className="panel wrapper">
       <div className="panel header">
-        {headerLinks}
+        {header}
         <div className="header action">
         </div>
         {accountDropdown}

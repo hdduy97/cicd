@@ -6,7 +6,7 @@ const PopupBlock = ({ children, setShowComponent }) => {
   useEffect(() => {
     const handleClick = (event) => {
       const { target } = event
-      if (!popupRef.current.contains(target)) {
+      if (popupRef.current && !popupRef.current.contains(target)) {
         setShowComponent(false)
       }
     }

@@ -13,15 +13,16 @@ const CreateForm = ({ setShowCreateForm }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-
   const [message, setMessage] = useState(initialMessage)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch({ type: 'CHANGE_GLOBAL_MESSAGE', payload: message})
-    setTimeout(() => {
-      dispatch({ type: 'CHANGE_GLOBAL_MESSAGE', payload: initialMessage})
-    }, 5000);
+    if (message.text.length > 0) {
+      dispatch({ type: 'CHANGE_GLOBAL_MESSAGE', payload: message})
+      setTimeout(() => {
+        dispatch({ type: 'CHANGE_GLOBAL_MESSAGE', payload: initialMessage})
+      }, 5000);
+    }
   }, [message, dispatch])
 
   const login = async () => {
