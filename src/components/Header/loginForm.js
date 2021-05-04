@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 
-const LoginForm = () => {
+const LoginForm = ({ setShowLoginForm }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -12,6 +12,8 @@ const LoginForm = () => {
       const { data } = await axios.post(process.env.REACT_APP_RESTURL + '/integration/customer/token', { username, password })
 
       console.log(data)
+
+      setShowLoginForm(false)
     } catch (e) {
       alert(e.response.data.message)
     }
@@ -27,7 +29,9 @@ const LoginForm = () => {
         <label>Password: </label>
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
       </div>
-      <button>Login</button>
+      <div className="field-submit">
+        <button>Login</button>
+      </div>
     </form>
   )
 }

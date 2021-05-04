@@ -56,7 +56,9 @@ const CreateForm = ({ setShowCreateForm }) => {
         <label>Password: </label>
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
       </div>
-      <button>Create</button>
+      <div className="field-submit">
+        <button>Create</button>
+      </div>
     </form>
   )
 }
