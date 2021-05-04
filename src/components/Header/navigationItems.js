@@ -2,8 +2,8 @@ import React from 'react'
 
 const NavigationItems = ({ category, hoverCategories, setHoverCategories }) => {
   const onItemEnter = (item) => {
-    if(item.children_data.length > 0 && !hoverCategories.includes(item.id)) {
-      setHoverCategories([...hoverCategories, {
+    if(item.children_data.length > 0 && !hoverCategories.some(el => el.id === item.id)) {
+      setHoverCategories([...hoverCategories.filter(el => el.level !== item.level), {
         id: item.id,
         level: item.level
       }])
@@ -14,7 +14,7 @@ const NavigationItems = ({ category, hoverCategories, setHoverCategories }) => {
     setHoverCategories(hoverCategories.filter(el => el.id !== category.id && el.level <= category.level))
   }
 
-  // if (category.is_active) {
+  if (category.is_active) {
     if (category.children_data && category.children_data.length > 0 && hoverCategories.some((el) => el.id === category.id)) {
       const childCategory = category.children_data.map(el => {
         return (
@@ -53,7 +53,7 @@ const NavigationItems = ({ category, hoverCategories, setHoverCategories }) => {
         </li>
       )
     }
-  // }
+  }
 
   return null
 }

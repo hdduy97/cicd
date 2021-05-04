@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import LoginForm from './loginForm'
 import CreateForm from './createForm'
@@ -16,6 +17,8 @@ const Panel = () => {
       <li>Sign Out</li>
     </ul>
   )
+  
+  const customer = useSelector(state => state.customer)
 
   const loginFormRender = showLoginForm && 
   (
@@ -31,20 +34,30 @@ const Panel = () => {
     </PopupBlock>
   )
 
+  const headerLinksCustomer = (
+    <span>Welcome, {customer.firstname} {customer.lastname}!</span>
+  )
+
+  const headerLinksGuest = (
+    <ul className="header links">
+      <li className="account-action">
+        <span onClick={() => setShowLoginForm(true)}>Log In</span>
+        {loginFormRender}
+      </li>
+      <li>or</li>
+      <li className="account-action">
+        <span onClick={() => setShowCreateForm(true)}>Create an Account</span>
+        {createFormRender}
+      </li>
+    </ul>
+  )
+
+  const headerLinks = customer.id ? headerLinksCustomer : headerLinksGuest
+
   return (
     <div className="panel wrapper">
       <div className="panel header">
-        <ul className="header links">
-          <li className="account-action">
-            <span onClick={() => setShowLoginForm(true)}>Log In</span>
-            {loginFormRender}
-          </li>
-          <li>or</li>
-          <li className="account-action">
-            <span onClick={() => setShowCreateForm(true)}>Create an Account</span>
-            {createFormRender}
-          </li>
-        </ul>
+        {headerLinks}
         <div className="header action">
         </div>
         {accountDropdown}

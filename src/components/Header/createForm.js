@@ -1,10 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+
+const initialMessage = {
+  isSuccess: true,
+  text: ''
+}
 
 const CreateForm = ({ setShowCreateForm }) => {
   const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+
+  const [message, setMessage] = useState(initialMessage)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch({ type: 'CHANGE_GLOBAL_MESSAGE', payload: message})
+    setTimeout(() => {
+      dispatch({ type: 'CHANGE_GLOBAL_MESSAGE', payload: initialMessage})
+    }, 5000);
+  }, [message, dispatch])
 
   const login = async () => {
     try {
@@ -13,11 +31,14 @@ const CreateForm = ({ setShowCreateForm }) => {
         password
       })
 
-      console.log(data)
+      dispatch({ type: 'SET_TOKEN', payload: data })
       
       setShowCreateForm(false)
     } catch(e) {
-      alert(e.response.data.message)
+      setMessage({
+        isSuccess: false,
+        text: e.response.data.message
+      })
     }
   }
 
@@ -28,16 +49,25 @@ const CreateForm = ({ setShowCreateForm }) => {
       await axios.post(process.env.REACT_APP_RESTURL + '/customers', { 
         customer: {
           email,
-          firstname
+          firstname,
+          lastname
         }, 
         password
+      })
+
+      setMessage({
+        isSuccess: true,
+        text: 'Successfully sign up'
       })
 
       login()
     } catch (e) {
       if (e.response.data.id) login()
       else {
-        alert(e.response.data.message)
+        setMessage({
+          isSuccess: false,
+          text: e.response.data.message
+        })
       }
     }
   }
@@ -45,8 +75,12 @@ const CreateForm = ({ setShowCreateForm }) => {
   return (
     <form onSubmit={onSubmit}>
       <div className="field">
-        <label>Firstname: </label>
+        <label>First name: </label>
         <input type="text" value={firstname} onChange={e => setFirstname(e.target.value)}/>
+      </div>
+      <div className="field">
+        <label>Last name: </label>
+        <input type="text" value={lastname} onChange={e => setLastname(e.target.value)}/>
       </div>
       <div className="field">
         <label>Email: </label>

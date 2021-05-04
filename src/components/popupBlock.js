@@ -16,7 +16,7 @@ const PopupBlock = ({ children, setShowComponent }) => {
     return () => {
       document.removeEventListener('click', handleClick)
     }
-  }, [])
+  }, [setShowComponent])
 
   return (
     <div ref={popupRef}>
