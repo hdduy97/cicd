@@ -10,13 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: ls -la
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
       - run: npm i
       - run: CI=false npm run build
-      - run: ls -la
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/

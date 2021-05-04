@@ -21,7 +21,7 @@ const Header = () => {
       dispatch({ type: 'SET_CUSTOMER', payload: customer })
     }
     const token = Cookie.get('token')
-    if (token.length > 0) {
+    if (token && token.length > 0) {
       dispatch({ type: 'SET_TOKEN', payload: token})
       getCustomerInfo(token)
     }
