@@ -7,9 +7,10 @@ const GlobalMessage = () => {
 
   const { text, isSuccess } = globalMessage
 
-  return text.length === 0 ? null :
-  (
-    <div className={`global-message ${isSuccess ? 'success' : 'error'}`}>{text}</div>
+  return (
+    <div className="page messages">
+      { text.length > 0 && <div className={`global-message ${isSuccess ? 'success' : 'error'}`}>{text}</div> }
+    </div>
   )
 }
 

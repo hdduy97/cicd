@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { Link, useHistory } from 'react-router-dom'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
@@ -12,18 +13,11 @@ const Panel = () => {
   const [showLoginForm, setShowLoginForm] = useState(false)
   const [showCreateFrom, setShowCreateForm] = useState(false)
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false)
-  const accountDropdown = false && 
-  (
-    <ul className="header dropdown">
-      <li>Account</li>
-      <li>My Wish List</li>
-      <li>Sign Out</li>
-    </ul>
-  )
   
   const customer = useSelector(state => state.customer)
 
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const loginFormRender = showLoginForm && 
   (
@@ -43,14 +37,15 @@ const Panel = () => {
     setShowCustomerDropdown(false)
     dispatch({ type: 'RESET_TOKEN' })
     dispatch({ type: 'RESET_CUSTOMER' })
+    history.push('/')
   }
 
   const headerCustomerDropdown = (
     <>
       <span><FontAwesomeIcon icon={faChevronUp} /></span>
       <PopupBlock setShowComponent={setShowCustomerDropdown}>
-        <ul className="header dropdown">
-          <li>Account</li>
+        <ul className="header dropdown" onClick={() => setShowCustomerDropdown(false)}>
+          <li><Link to="/customer/account">Account</Link></li>
           <li>My Wish List</li>
           <li onClick={signOut}>Sign Out</li>
         </ul>
@@ -88,9 +83,6 @@ const Panel = () => {
     <div className="panel wrapper">
       <div className="panel header">
         {header}
-        <div className="header action">
-        </div>
-        {accountDropdown}
       </div>
     </div>
   )

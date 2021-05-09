@@ -1,15 +1,18 @@
-.global-message {
-    padding: 10px 20px;
-    margin: 20px auto 10px;
-    max-width: 1280px;
-    &.error {
-        background-color: #fae5e5;
-        border: 1px solid #e02b27;
-        color: #e02b27;
-    }
-    &.success {
-        background-color: #D0F8D4;
-        border: 1px solid #209C2C;
-        color: #209C2C;
+.messages {
+    margin-bottom: 20px;
+    .global-message {
+        padding: 10px 20px;
+        margin: 20px auto 0;
+        max-width: 1280px;
+        &.error {
+            background-color: #fae5e5;
+            border: 1px solid #e02b27;
+            color: #e02b27;
+        }
+        &.success {
+            background-color: #D0F8D4;
+            border: 1px solid #209C2C;
+            color: #209C2C;
+        }
     }
 }

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Link } from 'react-router-dom'
+
 const NavigationItems = ({ category, hoverCategories, setHoverCategories }) => {
   const onItemEnter = (item) => {
     if(item.children_data.length > 0 && !hoverCategories.some(el => el.id === item.id)) {
@@ -29,9 +31,9 @@ const NavigationItems = ({ category, hoverCategories, setHoverCategories }) => {
           onMouseEnter={() => onItemEnter(category)}
           onMouseLeave={() => onItemLeave(category)}
         >
-          <a href={`/${category.id}`}>
+          <Link to={`/category/${category.id}`}>
             <span>{category.name}</span>
-          </a>
+          </Link>
           <ul className={`children-category level-${category.level}`}>
             {childCategory}
           </ul>
@@ -47,9 +49,9 @@ const NavigationItems = ({ category, hoverCategories, setHoverCategories }) => {
           onMouseEnter={() => onItemEnter(category)}
           onMouseLeave={() => onItemLeave(category)}
         >
-          <a href={`/${category.id}`}>
+          <Link to={`/category/${category.id}`}>
             <span>{category.name}</span>
-          </a>
+          </Link>
         </li>
       )
     }
