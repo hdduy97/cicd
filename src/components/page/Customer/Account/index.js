@@ -8,9 +8,7 @@ import './index.scss'
 
 const Index = () => {
   const customer = useSelector(state => state.customer)
-
-  if (!customer.id) return null
-
+  
   return (
     <Layout>
       <div className="page-title-wrapper">

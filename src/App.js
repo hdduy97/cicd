@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom"
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Cookie from 'js-cookie'
 import axios from 'axios'
@@ -21,10 +21,19 @@ import AuthRoute from './components/authRoute'
 import CustomerAccountEdit from './components/page/Customer/Account/Edit'
 import './app.scss'
 
+import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN } from './reducers/types'
+
 const App = () => {
   const [isAuthed, setIsAuthed] = useState(true)
+  const [loading, setLoading] = useState(true)
   
   const dispatch = useDispatch()
+
+  const customer = useSelector(state => state.customer)
+
+  useEffect(() => {
+    if (customer.id) setIsAuthed(true)
+  }, [customer.id])
 
   useEffect(() => {
     const getCustomerInfo = async (token) => {
@@ -35,22 +44,27 @@ const App = () => {
           }
         })
 
-        dispatch({ type: 'SET_CUSTOMER', payload: customer })
+        dispatch({ type: SET_CUSTOMER, payload: customer })
       } catch(e) {
         setIsAuthed(false)
-        dispatch({ type: 'RESET_TOKEN' })
-        dispatch({ type: 'RESET_CUSTOMER' })
+        dispatch({ type: RESET_TOKEN })
+        dispatch({ type: RESET_CUSTOMER })
       }
+
+      setLoading(false)
     }
     const token = Cookie.get('token')
     
     if (token && token.length > 0) {
-      dispatch({ type: 'SET_TOKEN', payload: token})
+      dispatch({ type: SET_TOKEN, payload: token})
       getCustomerInfo(token)
     } else {
+      setLoading(false)
       setIsAuthed(false)
     }
   }, [dispatch])
+
+  if (loading) return null
 
   return (
     <Router>
@@ -59,7 +73,7 @@ const App = () => {
       
       <div className="container">
         <Switch>
-          <AuthRoute path="/customer/account/edit" component={CustomerAccountEdit} authed={isAuthed} />
+          <AuthRoute path="/customer/account/edit" component={CustomerAccountEdit} authed={isAuthed} customer={customer} />
           <AuthRoute path="/customer/account" component={CustomerAccount} authed={isAuthed} />
           <Route path="/sales/order/history">
             <SalesOrderHistory />

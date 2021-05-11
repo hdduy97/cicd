@@ -5,11 +5,11 @@ import './globalMessage.scss'
 const GlobalMessage = () => {
   const globalMessage = useSelector(state => state.globalMessage)
 
-  const { text, isSuccess } = globalMessage
+  const { message, isSuccess } = globalMessage
 
   return (
     <div className="page messages">
-      { text.length > 0 && <div className={`global-message ${isSuccess ? 'success' : 'error'}`}>{text}</div> }
+      { message.length > 0 && <div className={`global-message ${isSuccess ? 'success' : 'error'}`}>{message}</div> }
     </div>
   )
 }

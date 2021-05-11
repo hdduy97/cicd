@@ -1,14 +1,16 @@
+import { CHANGE_GLOBAL_MESSAGE } from './types'
+
 const initialState = {
   isSuccess: true,
-  text: ''
+  message: ''
 }
 
 const globalMessage = (state = initialState, action) => {
   switch (action.type) {
-    case 'CHANGE_GLOBAL_MESSAGE':
+    case CHANGE_GLOBAL_MESSAGE:
       return {
         isSuccess: action.payload.isSuccess,
-        text: action.payload.text
+        message: action.payload.message
       }
     default:
       return state

@@ -1,8 +1,10 @@
+import { RESET_CUSTOMER, SET_CUSTOMER } from './types'
+
 const customer = (state = {}, action) => {
   switch(action.type) {
-    case 'RESET_CUSTOMER':
+    case RESET_CUSTOMER:
       return {}
-    case 'SET_CUSTOMER':
+    case SET_CUSTOMER:
       return action.payload
     default:
       return state

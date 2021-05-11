@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 
-const initialMessage = {
-  isSuccess: true,
-  text: ''
-}
+import { CHANGE_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER } from '../../reducers/types'
 
 const CreateForm = ({ setShowCreateForm }) => {
   const [firstname, setFirstname] = useState('')
@@ -13,33 +10,41 @@ const CreateForm = ({ setShowCreateForm }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const [message, setMessage] = useState(initialMessage)
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    if (message.text.length > 0) {
-      dispatch({ type: 'CHANGE_GLOBAL_MESSAGE', payload: message})
-      setTimeout(() => {
-        dispatch({ type: 'CHANGE_GLOBAL_MESSAGE', payload: initialMessage})
-      }, 5000);
-    }
-  }, [message, dispatch])
+  
+  const showMessage = (isSuccess, message) => {
+    dispatch({ type: CHANGE_GLOBAL_MESSAGE, payload: { isSuccess, message }})
+  
+    setTimeout(() => {
+      dispatch({ type: CHANGE_GLOBAL_MESSAGE, payload: {
+        isSuccess: false,
+        message: ''
+      }})
+    }, 5000)
+  }
+  
+  const showErrorMessage = (message) => showMessage(false, message)
+  const showSuccessMessage = (message) => showMessage(true, message)
 
   const login = async () => {
     try {
-      const { data } = await axios.post(process.env.REACT_APP_RESTURL + '/integration/customer/token', {
+      const { data: token } = await axios.post(process.env.REACT_APP_RESTURL + '/integration/customer/token', {
         username: email,
         password
       })
 
-      dispatch({ type: 'SET_TOKEN', payload: data })
+      const { data: customer } = await axios.get(process.env.REACT_APP_RESTURL + '/customers/me', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      dispatch({ type: SET_TOKEN, payload: token })
+      dispatch({ type: SET_CUSTOMER, payload: customer })
       
       setShowCreateForm(false)
     } catch(e) {
-      setMessage({
-        isSuccess: false,
-        text: e.response.data.message
-      })
+      showErrorMessage(e.response.data.message)
     }
   }
 
@@ -56,19 +61,13 @@ const CreateForm = ({ setShowCreateForm }) => {
         password
       })
 
-      setMessage({
-        isSuccess: true,
-        text: 'Successfully sign up'
-      })
+      showSuccessMessage('Successfully sign up')
 
       login()
     } catch (e) {
       if (e.response.data.id) login()
       else {
-        setMessage({
-          isSuccess: false,
-          text: e.response.data.message
-        })
+        showErrorMessage(e.response.data.message)
       }
     }
   }

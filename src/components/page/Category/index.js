@@ -8,6 +8,8 @@ const Index = () => {
 
     const { id } = params
 
+    const renderProducts = products.map(product => <li key={product.id}>{product.name}</li>)
+
     useEffect(() => {
         const fetchProducts = async () => {
             const { data } = await axios.get(`${process.env.REACT_APP_RESTURL}/products`, {
@@ -24,9 +26,6 @@ const Index = () => {
                 }
             })
 
-            console.log(data)
-
-            console.log()
             setProducts(data.items)
         }
 
@@ -35,7 +34,7 @@ const Index = () => {
 
     return (
         <div>
-            Category {id}
+            <ul>{renderProducts}</ul>
         </div>
     )
 }
