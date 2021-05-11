@@ -42,7 +42,7 @@ const Panel = () => {
 
   const headerCustomerDropdown = (
     <>
-      <span><FontAwesomeIcon icon={faChevronUp} /></span>
+      <span className="pointer"><FontAwesomeIcon icon={faChevronUp} /></span>
       <PopupBlock setShowComponent={setShowCustomerDropdown}>
         <ul className="header dropdown" onClick={() => setShowCustomerDropdown(false)}>
           <li><Link to="/customer/account">Account</Link></li>
@@ -58,7 +58,7 @@ const Panel = () => {
       <span>Welcome, {customer.firstname} {customer.lastname}! </span>
       {showCustomerDropdown 
         ? headerCustomerDropdown 
-        : <span><FontAwesomeIcon onClick={() => setShowCustomerDropdown(!showCustomerDropdown)} icon={faChevronDown} /></span>
+        : <span className="pointer"><FontAwesomeIcon onClick={() => setShowCustomerDropdown(!showCustomerDropdown)} icon={faChevronDown} /></span>
       }
     </div>
   )
