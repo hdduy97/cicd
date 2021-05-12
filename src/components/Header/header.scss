@@ -1,0 +1,25 @@
+.header.content {
+    padding: 22px 20px;
+    box-sizing: border-box;
+    max-width: 1280px;
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    flex: 0 0 50%;
+}
+
+.block-right {
+    display: flex;
+    align-items: center;
+}
+
+.minicart-wrapper {
+    margin-left: 20px;
+    font-size: 22px;
+    color: #757575;
+    cursor: pointer;
+}

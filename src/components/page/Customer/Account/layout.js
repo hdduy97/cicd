@@ -15,7 +15,9 @@ const Layout = ({ children }) => {
     { label: 'My Account', url: '/customer/account' },
     { label: 'My Orders', url: '/sales/order/history' },
     {},
-    { label: 'Account Information', url: '/customer/account/edit'}
+    { label: 'Account Information', url: '/customer/account/edit'},
+    {},
+    { label: 'Newsletter Subscriptions', url: '/newsletter/manage'}
   ]
 
   const navItemsRender = navItems.map((item, index) => (

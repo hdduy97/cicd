@@ -8,6 +8,10 @@ import './index.scss'
 
 const Index = () => {
   const customer = useSelector(state => state.customer)
+
+  const newsletterMessage = customer.extension_attributes.is_subscribed
+    ? 'You are subscribed to "General Subscription".'
+    : "You aren't subscribed to our newsletter."
   
   return (
     <Layout>
@@ -45,10 +49,10 @@ const Index = () => {
               <span>Newsletters</span>
             </strong>
             <div className="box-content">
-              <p>You are subscribed to "General Subscription".</p>
+              <p>{newsletterMessage}</p>
             </div>
             <div className="box-actions">
-              <Link to="/" className="action edit">
+              <Link to="/newsletter/manage" className="action edit">
                 <span>Edit</span>
               </Link>
             </div>

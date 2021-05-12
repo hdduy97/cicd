@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import Cookie from 'js-cookie'
 import axios from 'axios'
 
-import Header from './components/Header/header'
+import Header from './components/Header'
+import Navigation from './components/navigation'
 import GlobalMessage from './components/globalMessage'
 import Home from './components/page/Home'
 import CustomerAccount from './components/page/Customer/Account'
@@ -19,6 +20,7 @@ import Category from './components/page/Category'
 import Product from './components/page/Product'
 import AuthRoute from './components/authRoute'
 import CustomerAccountEdit from './components/page/Customer/Account/Edit'
+import NewsletterManage from './components/page/Newsletter/Manage'
 import './app.scss'
 
 import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN } from './reducers/types'
@@ -69,11 +71,13 @@ const App = () => {
   return (
     <Router>
       <Header />
+      <Navigation />
       <GlobalMessage />
       
       <div className="container">
         <Switch>
-          <AuthRoute path="/customer/account/edit" component={CustomerAccountEdit} authed={isAuthed} customer={customer} />
+          <AuthRoute path="/newsletter/manage" component={NewsletterManage} authed={isAuthed} />
+          <AuthRoute path="/customer/account/edit" component={CustomerAccountEdit} authed={isAuthed} />
           <AuthRoute path="/customer/account" component={CustomerAccount} authed={isAuthed} />
           <Route path="/sales/order/history">
             <SalesOrderHistory />

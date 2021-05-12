@@ -15,10 +15,14 @@
 }
 
 .block-title {
-    font-size: 22px;
+    font-size: 1.8rem;
     border-bottom: 1px solid #c6c6c6;
     margin-bottom: 25px;
     padding-bottom: 10px;
+    & > span {
+        font-size: 22px;
+        font-weight: 300;
+    }
 }
 
 .box-information,
