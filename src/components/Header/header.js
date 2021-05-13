@@ -1,19 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 
 import './header.scss'
 
-const Header = () => {
-  const [logo, setLogo] = useState({
-    src: '',
-    width: 0,
-    height: 0,
-    alt: null
-  })
+const Header = ({ logo }) => {
 
   const [search, setSearch] = useState('')
 
@@ -23,21 +16,7 @@ const Header = () => {
     console.log(search)
   }
 
-  useEffect(() => {
-    const fetchLogo = async() => {
-      try {
-        const { data } = await axios.get(process.env.REACT_APP_RESTURL + '/store/logo')
-
-        setLogo(data)
-      } catch (e) {
-
-      }
-    }
-
-    fetchLogo()
-  }, [])
-
-  if (!logo.src) return null
+  if (!logo || !logo.src) return null
 
   return (
     <div className="header content">

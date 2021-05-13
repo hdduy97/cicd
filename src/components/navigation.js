@@ -1,22 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
 import './navigation.scss'
 
 import NavigationItems from './navigationItems'
 
-const Navigation = () => {
-  const [categories, setCategories] = useState([])
+const Navigation = ({ categories }) => {
   const [hoverCategories, setHoverCategories] = useState([])
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const { data } = await axios.get(process.env.REACT_APP_RESTURL + '/categories')
-
-      setCategories(data.children_data)
-    }
-
-    fetchCategories()
-  }, [])
 
   const categoriesRender = categories.map(category => {
     return (

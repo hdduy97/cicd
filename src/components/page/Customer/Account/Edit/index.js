@@ -6,7 +6,7 @@ import Layout from '../layout'
 
 import './index.scss'
 
-import { CHANGE_GLOBAL_MESSAGE, SET_CUSTOMER } from '../../../../../reducers/types'
+import { CHANGE_GLOBAL_MESSAGE, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING } from '../../../../../reducers/types'
 
 const Index = () => {
   const customer = useSelector(state => state.customer)
@@ -52,6 +52,8 @@ const Index = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    dispatch({ type: SHOW_LOADING })
+    
     try {
       let customerData = {
         ...customer,
@@ -104,10 +106,11 @@ const Index = () => {
           dispatch({ type: SET_CUSTOMER, payload: customerResponse })
           showSuccessMessage('You saved the account information.')
         }
-      } 
+      }
     } catch (e) {
       showErrorMessage(e.response.data.message)
     }
+    dispatch({ type: HIDE_LOADING })
   }
 
   const changeEmailAndPasswordStyle = changeEmail || changePassword

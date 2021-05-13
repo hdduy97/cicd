@@ -5,7 +5,7 @@ import axios from 'axios'
 
 import Layout from '../../Customer/Account/layout'
 
-import { CHANGE_GLOBAL_MESSAGE, SET_CUSTOMER } from '../../../../reducers/types'
+import { CHANGE_GLOBAL_MESSAGE, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING } from '../../../../reducers/types'
 
 const Index = () => {
   const customer = useSelector(state => state.customer)
@@ -33,6 +33,7 @@ const Index = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    dispatch({ type: SHOW_LOADING })
 
     try {
       const { data: customerResponse } = await axios.put(process.env.REACT_APP_RESTURL + '/customers/me', 
@@ -58,6 +59,8 @@ const Index = () => {
     } catch (e) {
       showErrorMessage(e.response.data.message)
     }
+
+    dispatch({ type: HIDE_LOADING })
   }
 
   return (

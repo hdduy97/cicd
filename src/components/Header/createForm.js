@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 
-import { CHANGE_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER } from '../../reducers/types'
+import { CHANGE_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING } from '../../reducers/types'
 
 const CreateForm = ({ setShowCreateForm }) => {
   const [firstname, setFirstname] = useState('')
@@ -46,10 +46,12 @@ const CreateForm = ({ setShowCreateForm }) => {
     } catch(e) {
       showErrorMessage(e.response.data.message)
     }
+    dispatch({ type: HIDE_LOADING })
   }
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    dispatch({ type: SHOW_LOADING })
 
     try {
       await axios.post(process.env.REACT_APP_RESTURL + '/customers', { 
@@ -67,6 +69,7 @@ const CreateForm = ({ setShowCreateForm }) => {
     } catch (e) {
       if (e.response.data.id) login()
       else {
+        dispatch({ type: HIDE_LOADING })
         showErrorMessage(e.response.data.message)
       }
     }

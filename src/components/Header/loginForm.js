@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 
-import { CHANGE_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER } from '../../reducers/types'
+import { CHANGE_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING } from '../../reducers/types'
 
 const LoginForm = ({ setShowLoginForm }) => {
   const [username, setUsername] = useState('')
@@ -26,6 +26,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    dispatch({ type: SHOW_LOADING })
 
     try {
       const { data: token } = await axios.post(process.env.REACT_APP_RESTURL + '/integration/customer/token', { username, password })
@@ -45,6 +46,7 @@ const LoginForm = ({ setShowLoginForm }) => {
     } catch (e) {
       showErrorMessage(e.response.data.message)
     }
+    dispatch({ type: HIDE_LOADING })
   }
 
   return (

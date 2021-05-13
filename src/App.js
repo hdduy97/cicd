@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Cookie from 'js-cookie'
 import axios from 'axios'
 
+import Loading from './loading'
 import Header from './components/Header'
 import Navigation from './components/navigation'
 import GlobalMessage from './components/globalMessage'
@@ -23,11 +24,19 @@ import CustomerAccountEdit from './components/page/Customer/Account/Edit'
 import NewsletterManage from './components/page/Newsletter/Manage'
 import './app.scss'
 
-import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN } from './reducers/types'
+import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN, HIDE_LOADING } from './reducers/types'
 
 const App = () => {
   const [isAuthed, setIsAuthed] = useState(true)
-  const [loading, setLoading] = useState(true)
+  const loading = useSelector(state => state.loading)
+  const [loadingState, setLoadingState] = useState(loading)
+  const [categories, setCategories] = useState([])
+  const [logo, setLogo] = useState({
+    src: '',
+    width: 0,
+    height: 0,
+    alt: null
+  })
   
   const dispatch = useDispatch()
 
@@ -38,41 +47,53 @@ const App = () => {
   }, [customer.id])
 
   useEffect(() => {
-    const getCustomerInfo = async (token) => {
-      try {
-        const { data: customer } = await axios.get(process.env.REACT_APP_RESTURL + '/customers/me', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
+    const token = Cookie.get('token')
 
-        dispatch({ type: SET_CUSTOMER, payload: customer })
-      } catch(e) {
+    const getDataInfo = async () => {
+      if (token && token.length > 0) {
+        dispatch({ type: SET_TOKEN, payload: token})
+        try {
+          const { data: customer } = await axios.get(process.env.REACT_APP_RESTURL + '/customers/me', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+  
+          dispatch({ type: SET_CUSTOMER, payload: customer })
+        } catch(e) {
+          setIsAuthed(false)
+          dispatch({ type: RESET_TOKEN })
+          dispatch({ type: RESET_CUSTOMER })
+        }
+      } else {
         setIsAuthed(false)
-        dispatch({ type: RESET_TOKEN })
-        dispatch({ type: RESET_CUSTOMER })
       }
 
-      setLoading(false)
+      try {
+        const [{ data: navResponse }, { data: logo }] = await axios.all([
+          axios.get(process.env.REACT_APP_RESTURL + '/categories'),
+          axios.get(process.env.REACT_APP_RESTURL + '/store/logo')
+        ])
+
+        setCategories(navResponse.children_data)
+        setLogo(logo)
+      } catch(e) {}
+
+      dispatch({ type: HIDE_LOADING })
+      setLoadingState(false)
     }
-    const token = Cookie.get('token')
-    
-    if (token && token.length > 0) {
-      dispatch({ type: SET_TOKEN, payload: token})
-      getCustomerInfo(token)
-    } else {
-      setLoading(false)
-      setIsAuthed(false)
-    }
+
+    getDataInfo()
   }, [dispatch])
 
-  if (loading) return null
+  if (loadingState) return <Loading />
 
   return (
     <Router>
-      <Header />
-      <Navigation />
+      <Header logo={logo} />
+      <Navigation categories={categories} />
       <GlobalMessage />
+      { loading ? <Loading /> : null }
       
       <div className="container">
         <Switch>
