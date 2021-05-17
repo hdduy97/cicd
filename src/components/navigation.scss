@@ -10,7 +10,6 @@
 
   .nav-items {
     display: flex;
-    list-style: none;
 
     .item {
       position: relative;
@@ -53,7 +52,6 @@
         position: absolute;
         top: 100%;
         background-color: #fff;
-        list-style: none;
         min-width: 230px;
         padding: 15px 0;
         border: 1px solid #ccc;

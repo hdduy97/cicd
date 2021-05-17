@@ -25,6 +25,11 @@ body a {
   color: #006bb4;
 }
 
+body ul,
+body ol {
+  list-style: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

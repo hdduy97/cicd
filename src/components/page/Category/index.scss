@@ -1,0 +1,30 @@
+.products.list {
+    display: grid; /* 1 */
+    grid-template-columns: repeat(auto-fill, 220px); /* 2 */
+    grid-gap: 1rem; /* 3 */
+    justify-content: space-between; /* 4 */
+}
+
+.product-image-photo {
+    max-width: 220px;
+    max-height: 320px;
+    .product-item {
+        margin-bottom: 20px;
+    }
+}
+
+.product-item-inner {
+    margin-top: 10px;
+    button {
+        width: 100%;
+    }
+}
+
+.price-box {
+    margin-top: 10px;
+}
+
+.product.name {
+    min-height: 36px;
+    font-weight: 500;
+}
