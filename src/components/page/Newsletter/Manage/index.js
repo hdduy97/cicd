@@ -5,7 +5,7 @@ import axios from 'axios'
 
 import Layout from '../../Customer/Account/layout'
 
-import { CHANGE_GLOBAL_MESSAGE, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING } from '../../../../reducers/types'
+import { ADD_GLOBAL_MESSAGE, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING } from '../../../../reducers/types'
 
 const Index = () => {
   const customer = useSelector(state => state.customer)
@@ -18,14 +18,7 @@ const Index = () => {
   const dispatch = useDispatch()
   
   const showMessage = (isSuccess, message) => {
-    dispatch({ type: CHANGE_GLOBAL_MESSAGE, payload: { isSuccess, message }})
-  
-    setTimeout(() => {
-      dispatch({ type: CHANGE_GLOBAL_MESSAGE, payload: {
-        isSuccess: false,
-        message: ''
-      }})
-    }, 5000)
+    dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess, message }})
   }
   
   const showErrorMessage = (message) => showMessage(false, message)

@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Cookie from 'js-cookie'
 import axios from 'axios'
 
-import Loading from './loading'
+import Loading from './components/loading'
 import Header from './components/Header'
 import Navigation from './components/navigation'
 import GlobalMessage from './components/globalMessage'
@@ -100,9 +100,7 @@ const App = () => {
           <AuthRoute path="/newsletter/manage" component={NewsletterManage} authed={isAuthed} />
           <AuthRoute path="/customer/account/edit" component={CustomerAccountEdit} authed={isAuthed} />
           <AuthRoute path="/customer/account" component={CustomerAccount} authed={isAuthed} />
-          <Route path="/sales/order/history">
-            <SalesOrderHistory />
-          </Route>
+          <AuthRoute path="/sales/order/history" component={SalesOrderHistory} authed={isAuthed} />
           <Route path="/category/:id">
             <Category />
           </Route>

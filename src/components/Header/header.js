@@ -20,14 +20,16 @@ const Header = ({ logo }) => {
 
   return (
     <div className="header content">
-      <Link to="/" className="logo">
-        <img 
-          src={logo.src}
-          width={logo.width > 0 ? logo.width : ''}
-          height={logo.height > 0 ? logo.height : ''}
-          alt={logo.alt > 0 ? logo.alt : ''}
-        />
-      </Link>
+      <div className="logo">
+        <Link to="/" className="logo">
+          <img 
+            src={logo.src}
+            width={logo.width > 0 ? logo.width : ''}
+            height={logo.height > 0 ? logo.height : ''}
+            alt={logo.alt > 0 ? logo.alt : ''}
+          />
+        </Link>
+      </div>
       <div className="block-right">
         <div className="block block-search">
           <form onSubmit={onSubmit}>

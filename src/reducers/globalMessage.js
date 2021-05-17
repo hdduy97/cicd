@@ -1,17 +1,11 @@
-import { CHANGE_GLOBAL_MESSAGE } from './types'
+import { ADD_GLOBAL_MESSAGE, REMOVE_GLOBAL_MESSAGE } from './types'
 
-const initialState = {
-  isSuccess: true,
-  message: ''
-}
-
-const globalMessage = (state = initialState, action) => {
+const globalMessage = (state = [], action) => {
   switch (action.type) {
-    case CHANGE_GLOBAL_MESSAGE:
-      return {
-        isSuccess: action.payload.isSuccess,
-        message: action.payload.message
-      }
+    case ADD_GLOBAL_MESSAGE:
+      return [...state, action.payload]
+    case REMOVE_GLOBAL_MESSAGE:
+      return state.slice(1)
     default:
       return state
   }
