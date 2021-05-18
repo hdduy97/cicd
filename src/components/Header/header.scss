@@ -20,7 +20,98 @@
 
 .minicart-wrapper {
     margin-left: 15px;
-    font-size: 22px;
-    color: #757575;
-    cursor: pointer;
+    position: relative;
+    .minicart-items {
+        .item {
+            &:not(:first-child) {
+                border-top: 1px solid #ccc;
+                padding-top: 15px;
+            }
+            padding-bottom: 20px;
+        }
+    }
+    .minicart-items-wrapper {
+        border: 1px solid #cccccc;
+        margin: 0 -20px;
+        border-left: 0;
+        border-right: 0;
+        overflow-x: auto;
+        padding: 15px;
+    }
+    .cart {
+        display: flex;
+        cursor: pointer;
+    }
+    .cart-icon {
+        color: #757575;
+        font-size: 22px;
+    }
+    .counter.qty {
+        background: #ff5501;
+        color: #ffffff;
+        height: 24px;
+        line-height: 24px;
+        border-radius: 2px;
+        display: inline-block;
+        margin: 3px 0 0 5px;
+        min-width: 18px;
+        overflow: hidden;
+        padding: 0 8px;
+        text-align: center;
+        white-space: normal;
+    }
+    .counter-number {
+        text-shadow: 0 0 7px #000000;
+    }
+    .cart-dropdown {
+        margin: 0;
+        padding: 25px 20px;
+        list-style: none none;
+        background: #ffffff;
+        border: 1px solid #bbbbbb;
+        margin-top: 4px;
+        min-width: 100%;
+        width: 390px;
+        z-index: 101;
+        box-sizing: border-box;
+        position: absolute;
+        top: 100%;
+        right: -10px;
+        box-shadow: 0 3px 3px rgba(0, 0, 0, 0.15);
+        .total {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 10px 10px;
+            .price-container {
+                text-align: right;
+                font-weight: 700;
+                font-size: 18px;
+            }
+        }
+    }
+    .actions {
+        margin-top: 15px;
+        & > .primary {
+            margin: 0 10px 15px;
+        }
+        .btn-checkout {
+            width: 100%;
+            background-image: none;
+            background: #1979c3;
+            border: 1px solid #1979c3;
+            color: #ffffff;
+            cursor: pointer;
+            display: inline-block;
+            font-weight: 500;
+            padding: 7px 15px;
+            font-size: 14px;
+            box-sizing: border-box;
+            vertical-align: middle;
+            line-height: 22px;
+            padding: 14px 17px;
+            font-size: 18px;
+            border-radius: 3px;
+            text-align: center;
+        }
+    }
 }

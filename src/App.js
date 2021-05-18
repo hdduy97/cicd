@@ -22,6 +22,7 @@ import Product from './components/page/Product'
 import AuthRoute from './components/authRoute'
 import CustomerAccountEdit from './components/page/Customer/Account/Edit'
 import NewsletterManage from './components/page/Newsletter/Manage'
+import Checkout from './components/page/Checkout'
 import './app.scss'
 
 import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN, HIDE_LOADING } from './reducers/types'
@@ -101,6 +102,7 @@ const App = () => {
           <AuthRoute path="/customer/account/edit" component={CustomerAccountEdit} authed={isAuthed} />
           <AuthRoute path="/customer/account" component={CustomerAccount} authed={isAuthed} />
           <AuthRoute path="/sales/order/history" component={SalesOrderHistory} authed={isAuthed} />
+          <AuthRoute path="/checkout" component={Checkout} authed={isAuthed} />
           <Route path="/category/:id">
             <Category />
           </Route>

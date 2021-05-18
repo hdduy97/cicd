@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 
 import ShowPerPage from '../../showPerPage'
 
-import { SHOW_LOADING, HIDE_LOADING } from '../../../reducers/types'
+import { SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, ADD_GLOBAL_MESSAGE } from '../../../reducers/types'
 
 import './index.scss'
 
 const Index = () => {
+  const token = useSelector(state => state.token)
   const limit = [12,24,36]
   const limitRender = limit.map(el => (
     <option value={el} key={el}>
@@ -25,11 +26,46 @@ const Index = () => {
     page: 1
   })
 
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  }
+
+  const restUrl = process.env.REACT_APP_RESTURL
+
+  const dispatch = useDispatch()
+
+  const onSubmit = async (e, { sku, name }) => {
+    e.preventDefault()
+
+    dispatch({ type: SHOW_LOADING })
+    try {
+      const { data: quoteId } = await axios.post(restUrl + '/carts/mine', {}, { headers })
+  
+      const cartItem = {
+        sku,
+        qty: 1,
+        quoteId
+      }
+  
+      await axios.post(restUrl + '/carts/mine/items', { cartItem }, { headers })
+  
+      dispatch({ type: TRIGGER_RELOAD })
+      dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { 
+        isSuccess: true, 
+        message: `You added ${name} to your shopping cart`
+      }})
+    } catch(e) {
+      dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})
+    }
+    dispatch({ type: HIDE_LOADING })
+  }
+
   const productsRender = products.map(product => (
     <li key={product.id} className="item product product-item">
       <div className="product-item-info">
         <span className="product-image-container" style={{width: '240px'}}>
-          <span className="product-image-wrapper" style={{paddingBottom: '125%'}}>
+          <span className="product-image-wrapper">
             <img className="product-image-photo" src={`https://demo.lotustest.net/pub/media/catalog/product${product.media_gallery_entries[0].file}`} alt={product.name} />
           </span>
         </span>
@@ -47,7 +83,7 @@ const Index = () => {
           <div className="product-item-inner">
             <div className="product actions product-item-actions">
               <div className="actions-primary">
-                <form>
+                <form onSubmit={(e) => onSubmit(e, product)}>
                   <button type="submit" title="Add to Cart" className="action tocart primary">
                     <span>Add to Cart</span>
                   </button>
@@ -60,12 +96,10 @@ const Index = () => {
     </li>
   ))
 
-  const dispatch = useDispatch()
-
   useEffect(() => {
     const fetchProducts = async () => {
       dispatch({ type: SHOW_LOADING })
-      const { data } = await axios.get(`${process.env.REACT_APP_RESTURL}/products`, {
+      const { data } = await axios.get(`${restUrl}/products`, {
         params: {
           'searchCriteria[filter_groups][0][filters][0][field]': 'category_id',
           'searchCriteria[filter_groups][0][filters][0][value]': id,
@@ -87,7 +121,11 @@ const Index = () => {
     }
 
     fetchProducts()
-  }, [id, dispatch, params])
+
+    return () => {
+      console.log(123)
+    }
+  }, [id, dispatch, params, restUrl])
 
   return (
     <div>

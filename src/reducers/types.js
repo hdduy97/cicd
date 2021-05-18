@@ -13,3 +13,6 @@ export const SET_TOKEN = 'SET_TOKEN'
 //loading
 export const SHOW_LOADING = 'SHOW_LOADING'
 export const HIDE_LOADING = 'HIDE_LOADING'
+
+//cart
+export const TRIGGER_RELOAD = 'TRIGGER_RELOAD'
