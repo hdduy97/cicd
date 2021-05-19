@@ -37,6 +37,7 @@
         border-right: 0;
         overflow-x: auto;
         padding: 15px;
+        max-height: 50vh;
     }
     .cart {
         display: flex;
@@ -113,5 +114,10 @@
             border-radius: 3px;
             text-align: center;
         }
+    }
+    .empty-cart {
+        text-align: center;
+        padding: 20px;
+        font-weight: 600;
     }
 }

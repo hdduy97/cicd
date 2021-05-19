@@ -57,8 +57,8 @@ const Index = () => {
       }})
     } catch(e) {
       dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})
+      dispatch({ type: HIDE_LOADING })
     }
-    dispatch({ type: HIDE_LOADING })
   }
 
   const productsRender = products.map(product => (
@@ -66,7 +66,7 @@ const Index = () => {
       <div className="product-item-info">
         <span className="product-image-container" style={{width: '240px'}}>
           <span className="product-image-wrapper">
-            <img className="product-image-photo" src={`https://demo.lotustest.net/pub/media/catalog/product${product.media_gallery_entries[0].file}`} alt={product.name} />
+            <img className="product-image-photo" src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${product.media_gallery_entries[0].file}`} alt={product.name} />
           </span>
         </span>
         <div className="product details product-item-details">

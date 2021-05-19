@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,18 +9,20 @@ import ConditionalComponent from '../conditionalComponent'
 import PopupBlock from '../popupBlock'
 import CartItem from './cartItem'
 
+import { HIDE_LOADING, SET_CART } from '../../reducers/types'
+
 import './header.scss'
 
 const Header = ({ logo }) => {
   const [search, setSearch] = useState('')
-  const [cartItems, setCartItems] = useState([])
-  const [cartTotals, setCartTotals] = useState({})
   const [isCartShow, setIsCartShow] = useState(false)
-
+  
+  const { items, totals, reloadCart } = useSelector(state => state.cart)
   const token = useSelector(state => state.token)
-  const reloadCart = useSelector(state => state.reloadCart)
 
-  const totalCartItems = cartItems.reduce((a,b) => a + b.qty, 0)
+  const dispatch = useDispatch()
+
+  const totalCartItems = items.reduce((a,b) => a + b.qty, 0)
 
   const onSearchSubmit = (e) => {
     e.preventDefault()
@@ -28,7 +30,7 @@ const Header = ({ logo }) => {
     console.log(search)
   }
 
-  const cartItemsRender = cartItems.map(item => {
+  const cartItemsRender = items.map(item => {
     return (
       <li key={item.sku} className="item">
         <CartItem item={item} />
@@ -58,15 +60,16 @@ const Header = ({ logo }) => {
           axios.get(restUrl + '/carts/mine/totals', { headers })
         ])
 
-        setCartItems(items)
-        setCartTotals(totals)
+        dispatch({ type: SET_CART, payload: {items, totals} })
       } catch(e) {
 
       }
+
+      dispatch({ type: HIDE_LOADING })
     }
 
-    fetchCartItems()
-  }, [token, reloadCart])
+    if (token) fetchCartItems()
+  }, [token, reloadCart, dispatch])
 
   if (!logo || !logo.src) return null
 
@@ -116,7 +119,7 @@ const Header = ({ logo }) => {
                       <div className="subtotal">
                         <div className="label">Cart Subtotal:</div>
                         <div className="amount price-container">
-                          <span className="price-wrapper">${cartTotals.grand_total && cartTotals.grand_total.toFixed(2)}</span>
+                          <span className="price-wrapper">${totals.grand_total && totals.grand_total.toFixed(2)}</span>
                         </div>
                       </div>
                     </div>
@@ -130,6 +133,9 @@ const Header = ({ logo }) => {
                         {cartItemsRender}
                       </ol>
                     </div>
+                  </ConditionalComponent>
+                  <ConditionalComponent condition={items.length === 0}>
+                    <div className="empty-cart">You have no items in your shopping cart.</div>
                   </ConditionalComponent>
                 </div>
               </div>

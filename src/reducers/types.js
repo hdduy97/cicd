@@ -16,3 +16,5 @@ export const HIDE_LOADING = 'HIDE_LOADING'
 
 //cart
 export const TRIGGER_RELOAD = 'TRIGGER_RELOAD'
+export const SET_CART = 'SET_CART'
+export const RESET_CART = 'RESET_CART'

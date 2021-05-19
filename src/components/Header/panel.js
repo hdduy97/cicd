@@ -9,7 +9,7 @@ import CreateForm from './createForm'
 import PopupBlock from '../popupBlock'
 import './panel.scss'
 
-import { RESET_TOKEN, RESET_CUSTOMER } from '../../reducers/types'
+import { RESET_TOKEN, RESET_CUSTOMER, RESET_CART } from '../../reducers/types'
 
 const Panel = () => {
   const [showLoginForm, setShowLoginForm] = useState(false)
@@ -39,6 +39,7 @@ const Panel = () => {
     setShowCustomerDropdown(false)
     dispatch({ type: RESET_TOKEN })
     dispatch({ type: RESET_CUSTOMER })
+    dispatch({ type: RESET_CART })
     history.push('/')
   }
 

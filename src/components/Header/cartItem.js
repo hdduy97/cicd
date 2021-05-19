@@ -19,13 +19,13 @@ const CartItem = ({ item }) => {
 
   const dispatch = useDispatch()
 
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  }
+
   const onSubmit = async (e) => {
     e.preventDefault()
-
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
 
     dispatch({ type: SHOW_LOADING })
 
@@ -45,8 +45,23 @@ const CartItem = ({ item }) => {
       dispatch({ type: TRIGGER_RELOAD })
     } catch(e) {
       dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})
+      dispatch({ type: HIDE_LOADING })
     }
-    dispatch({ type: HIDE_LOADING })
+  }
+
+  const onDeteleItem = async () => {
+    if (window.confirm('Are you sure you would like to remove this item from the shopping cart?')) {
+      dispatch({ type: SHOW_LOADING })
+
+      try {
+        await axios.delete(process.env.REACT_APP_RESTURL + '/carts/mine/items/' + item.item_id, { headers })
+        dispatch({ type: TRIGGER_RELOAD })
+      } catch (e) {
+        dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})
+        dispatch({ type: HIDE_LOADING })
+      }
+
+    }
   }
 
   return (
@@ -55,7 +70,7 @@ const CartItem = ({ item }) => {
         <span className="product-image-wrapper">
           <img 
             className="product-image-photo"
-            src="https://demo.lotustest.net/pub/media/catalog/product/cache/abd70257b1886fc2d9dc8a4db8a32ed4/m/b/mb05-black-0.jpg"
+            src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${item.extension_attributes.thumbnail}`}
             alt={item.name} 
           />
         </span>
@@ -72,7 +87,7 @@ const CartItem = ({ item }) => {
             </ConditionalComponent>
           </div>
           <div className="product-actions">
-            <span><FontAwesomeIcon icon={faTrashAlt} /></span>
+            <span onClick={onDeteleItem}><FontAwesomeIcon icon={faTrashAlt} /></span>
           </div>
         </div>
       </div>
