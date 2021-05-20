@@ -4,20 +4,21 @@ import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 
 import ShowPerPage from '../../showPerPage'
-
-import { SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, ADD_GLOBAL_MESSAGE } from '../../../reducers/types'
+import ConditionalComponent from '../../conditionalComponent'
+import { SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, ADD_GLOBAL_MESSAGE, SET_QUOTE_ID } from '../../../reducers/types'
 
 import './index.scss'
 
 const Index = () => {
   const token = useSelector(state => state.token)
+  const { quoteId: quoteIdState } = useSelector(state => state.cart)
   const limit = [12,24,36]
   const limitRender = limit.map(el => (
     <option value={el} key={el}>
       {el}
     </option>
   ))
-
+  
   const [products, setProducts] = useState([])
   const [totalCount, setTotalCount] = useState(0)
   const { id } = useParams()
@@ -37,8 +38,13 @@ const Index = () => {
 
     dispatch({ type: SHOW_LOADING })
     try {
-      const { data: quoteId } = await axios.post('/carts/mine', {}, { headers })
-  
+      let quoteId = quoteIdState
+      if (!quoteId) {
+        const { data } = await axios.post('/carts/mine', {}, { headers })
+
+        dispatch({ type: SET_QUOTE_ID, payload: data })
+        quoteId = data
+      }
       const cartItem = {
         sku,
         qty: 1,
@@ -118,25 +124,28 @@ const Index = () => {
     }
 
     fetchProducts()
-
-    return () => {
-      console.log(123)
-    }
   }, [id, dispatch, params])
 
   return (
     <div>
-      <div className="products wrapper grid products-grid">
-        <ol className="products list items product-items">
-          {productsRender}
-        </ol>
-      </div>
-      <ShowPerPage 
-        params={params} 
-        setParams={setParams}
-        totalCount={totalCount}
-        limitRender={limitRender}
-      /> 
+      <ConditionalComponent condition={products.length > 0}>
+        <div className="products wrapper grid products-grid">
+          <ol className="products list items product-items">
+            {productsRender}
+          </ol>
+        </div>
+        <ShowPerPage 
+          params={params} 
+          setParams={setParams}
+          totalCount={totalCount}
+          limitRender={limitRender}
+        /> 
+      </ConditionalComponent>
+      <ConditionalComponent condition={products.length === 0}>
+        <div className="empty-content">
+          Products not found
+        </div>
+      </ConditionalComponent>
     </div>
   )
 }

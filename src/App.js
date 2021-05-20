@@ -25,7 +25,7 @@ import NewsletterManage from './components/page/Newsletter/Manage'
 import Checkout from './components/page/Checkout'
 import './app.scss'
 
-import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN, HIDE_LOADING } from './reducers/types'
+import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN, HIDE_LOADING, SET_QUOTE_ID } from './reducers/types'
 
 const App = () => {
   const [isAuthed, setIsAuthed] = useState(true)
@@ -56,13 +56,13 @@ const App = () => {
     const getDataInfo = async () => {
       if (token && token.length > 0) {
         dispatch({ type: SET_TOKEN, payload: token})
+        const headers = { Authorization: `Bearer ${token}` }
         try {
-          const { data: customer } = await axios.get('/customers/me', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-  
+          const getCustomer = axios.get('/customers/me', { headers })
+          const getQuoteId = axios.post('/carts/mine', {}, { headers } )
+          const [{ data: customer }, { data: quoteId }] = await axios.all([getCustomer, getQuoteId])
+          
+          dispatch({ type: SET_QUOTE_ID, payload: quoteId})
           dispatch({ type: SET_CUSTOMER, payload: customer })
         } catch(e) {
           setIsAuthed(false)

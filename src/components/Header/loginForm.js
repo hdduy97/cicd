@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 
-import { ADD_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING } from '../../reducers/types'
+import { ADD_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING, SET_QUOTE_ID } from '../../reducers/types'
 
 const LoginForm = ({ setShowLoginForm }) => {
   const [username, setUsername] = useState('')
@@ -24,14 +24,15 @@ const LoginForm = ({ setShowLoginForm }) => {
     try {
       const { data: token } = await axios.post('/integration/customer/token', { username, password })
 
-      const { data: customer } = await axios.get('/customers/me', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const headers = { Authorization: `Bearer ${token}` }
+
+      const getCustomer = axios.get('/customers/me', { headers })
+      const getQuoteId = axios.post('/carts/mine', {}, { headers } )
+      const [{ data: customer }, { data: quoteId }] = await axios.all([getCustomer, getQuoteId])
 
       showSuccessMessage('Successfully logged in')
 
+      dispatch({ type: SET_QUOTE_ID, payload: quoteId})
       dispatch({ type: SET_TOKEN, payload: token })
       dispatch({ type: SET_CUSTOMER, payload: customer })
       

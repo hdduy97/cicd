@@ -2,8 +2,8 @@ import React from 'react'
 
 const Index = () => {
   return (
-    <div>
-      Home
+    <div className="empty-content">
+      CMS homepage content goes here.
     </div>
   )
 }

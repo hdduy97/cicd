@@ -49,7 +49,6 @@ const Panel = () => {
       <PopupBlock setShowComponent={setShowCustomerDropdown}>
         <ul className="header dropdown" onClick={() => setShowCustomerDropdown(false)}>
           <li><Link to="/customer/account">Account</Link></li>
-          <li>My Wish List</li>
           <li onClick={signOut}>Sign Out</li>
         </ul>
       </PopupBlock>

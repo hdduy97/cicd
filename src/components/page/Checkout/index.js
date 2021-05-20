@@ -144,7 +144,7 @@ const Index = () => {
           </h1>
         </div>
         <div className="checkout-success">
-          <p>Your order number is: <a href={`https://demo.lotustest.net/sales/order/view/order_id/${orderResponse.order_id}/`} className="order-number"><strong>{orderResponse.increment_id}</strong></a>.</p>
+          <p>Your order number is: <Link to="sales/order/history" className="order-number"><strong>{orderResponse.increment_id}</strong></Link>.</p>
           <p>We'll email you an order confirmation with details and tracking info.</p>
           <div className="actions-toolbar">
             <div className="primary">

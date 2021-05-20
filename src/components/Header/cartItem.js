@@ -11,7 +11,9 @@ import './cartItem.scss'
 
 const CartItem = ({ item }) => {
   const [qty, setQty] = useState(item.qty)
+
   const token = useSelector(state => state.token)
+  const { quoteId } = useSelector(state => state.cart)
 
   const onQtyBlur = () => {
     if (!qty || +qty === 0) setQty(item.qty)
@@ -29,8 +31,6 @@ const CartItem = ({ item }) => {
     dispatch({ type: SHOW_LOADING })
 
     try {
-      const { data: quoteId } = await axios.post('/carts/mine', {}, { headers })
-
       await axios.put('/carts/mine/items/' + item.item_id, 
         {
           cartItem: {
