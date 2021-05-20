@@ -31,7 +31,7 @@ const Index = () => {
   const showSuccessMessage = (message) => showMessage(true, message)
 
   const changeAccountInformation = async (data) => {
-    return axios.put(process.env.REACT_APP_RESTURL + '/customers/me',
+    return axios.put('/customers/me',
       {
         customer: data
       },
@@ -57,7 +57,7 @@ const Index = () => {
 
       if (changeEmail && !changePassword) {
         try {
-          await axios.post(process.env.REACT_APP_RESTURL + '/integration/customer/token', {
+          await axios.post('/integration/customer/token', {
             username: customer.email,
             password
           })
@@ -73,7 +73,7 @@ const Index = () => {
         if (changePassword) {
           if (newPassword === confirmNewPassword) {
             try {
-              const changePasswordAxios = axios.put(process.env.REACT_APP_RESTURL + '/customers/me/password', 
+              const changePasswordAxios = axios.put('/customers/me/password', 
                 {
                   currentPassword: password,
                   newPassword

@@ -21,12 +21,12 @@ const CreateForm = ({ setShowCreateForm }) => {
 
   const login = async () => {
     try {
-      const { data: token } = await axios.post(process.env.REACT_APP_RESTURL + '/integration/customer/token', {
+      const { data: token } = await axios.post('/integration/customer/token', {
         username: email,
         password
       })
 
-      const { data: customer } = await axios.get(process.env.REACT_APP_RESTURL + '/customers/me', {
+      const { data: customer } = await axios.get('/customers/me', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -47,7 +47,7 @@ const CreateForm = ({ setShowCreateForm }) => {
     dispatch({ type: SHOW_LOADING })
 
     try {
-      await axios.post(process.env.REACT_APP_RESTURL + '/customers', { 
+      await axios.post('/customers', { 
         customer: {
           email,
           firstname,

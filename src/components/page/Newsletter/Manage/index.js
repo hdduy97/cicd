@@ -29,7 +29,7 @@ const Index = () => {
     dispatch({ type: SHOW_LOADING })
 
     try {
-      const { data: customerResponse } = await axios.put(process.env.REACT_APP_RESTURL + '/customers/me', 
+      const { data: customerResponse } = await axios.put('/customers/me', 
         {
           customer: {
             ...customer,

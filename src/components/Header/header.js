@@ -9,7 +9,7 @@ import ConditionalComponent from '../conditionalComponent'
 import PopupBlock from '../popupBlock'
 import CartItem from './cartItem'
 
-import { HIDE_LOADING, SET_CART } from '../../reducers/types'
+import { HIDE_LOADING, SET_CART, RESET_CART } from '../../reducers/types'
 
 import './header.scss'
 
@@ -47,22 +47,19 @@ const Header = ({ logo }) => {
   
   useEffect(() => {
     const headers = {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`
     }
-
-    const restUrl = process.env.REACT_APP_RESTURL
 
     const fetchCartItems = async () => {
       try {
         const [{ data: items }, { data: totals }] = await axios.all([
-          axios.get(restUrl + '/carts/mine/items', { headers }),
-          axios.get(restUrl + '/carts/mine/totals', { headers })
+          axios.get('/carts/mine/items', { headers }),
+          axios.get('/carts/mine/totals', { headers })
         ])
 
         dispatch({ type: SET_CART, payload: {items, totals} })
       } catch(e) {
-
+        dispatch({ type: RESET_CART })
       }
 
       dispatch({ type: HIDE_LOADING })
@@ -119,7 +116,7 @@ const Header = ({ logo }) => {
                       <div className="subtotal">
                         <div className="label">Cart Subtotal:</div>
                         <div className="amount price-container">
-                          <span className="price-wrapper">${totals.grand_total && totals.grand_total.toFixed(2)}</span>
+                          <span className="price-wrapper">${totals.subtotal && totals.subtotal.toFixed(2)}</span>
                         </div>
                       </div>
                     </div>

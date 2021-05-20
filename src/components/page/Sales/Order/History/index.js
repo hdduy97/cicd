@@ -55,7 +55,7 @@ const Index = () => {
     const fetchOrders = async () => {
       dispatch({ type: SHOW_LOADING })
       try {
-        const { data: ordersResponse } = await axios.get(process.env.REACT_APP_RESTURL + '/customers/me/orders', {
+        const { data: ordersResponse } = await axios.get('/customers/me/orders', {
           headers: {
             Authorization: `bearer ${token}`
           },

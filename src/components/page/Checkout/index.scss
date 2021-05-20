@@ -27,7 +27,10 @@
         padding-right: 30px;
     }
     .form-shipping-address {
-        max-width: 500px;
+        margin-top: 15px;
+        .form-field {
+            max-width: 500px;
+        }
     }
     .form-field {
         margin-bottom: 20px;
@@ -46,13 +49,24 @@
             }
         }
     }
+    .form-actions {
+        text-align: right;
+    }
     .step-title {
         border-bottom: 1px solid #cccccc;
-        margin-bottom: 15px;
         padding-bottom: 10px;
         color: #333333;
         font-weight: 300;
         font-size: 26px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .edit {
+            cursor: pointer;
+        }
+    }
+    .addresses {
+        margin-top: 15px;
     }
     .order-summary {
         flex: 0 0 30%;
@@ -70,6 +84,7 @@
             padding-bottom: 10px;
             font-weight: 300;
             font-size: 26px;
+            display: block;
         }
         .items-in-cart {
             > .title {
@@ -80,6 +95,93 @@
                 text-decoration: none;
                 font-weight: 300;
                 margin-bottom: 0;
+            }
+        }
+    }
+    .shipping-address-item {
+        border: 2px solid transparent;
+        font-size: 14px;
+        line-height: 30px;
+        margin: 0 0 20px;
+        padding: 20px 35px 20px 20px;
+        transition: 0.3s border-color;
+        width: 33%;
+        display: inline-block;
+        position: relative;
+        vertical-align: top;
+        word-wrap: break-word;
+        &.selected-item {
+            border-color: #ff5501;
+        }
+        .check-icon {
+            position: absolute;
+            top: -3px;
+            right: -2px;
+            font-size: 30px;
+            color: #ff5501;
+        }
+    }
+    .table-checkout-shipping-method {
+        width: auto;
+        min-width: 500px;
+        tbody {
+            tr:first-child {
+                td {
+                    border-top: none;
+                }
+            }
+            td {
+                padding-bottom: 20px;
+                padding-top: 20px;
+                &:first-child {
+                    width: 20px;
+                    padding: 20px 0;
+                }
+            }
+        }
+    }
+    .empty-methods {
+        padding: 20px;
+    }
+    .action.primary {
+        line-height: 22px;
+        padding: 14px 17px;
+        font-size: 18px;
+    }
+    .table-totals {
+        border-top: 1px solid #cccccc;
+        padding-top: 10px;
+        tbody {
+            .mark {
+                border: 0;
+                font-weight: 400;
+                padding: 6px 0;
+                .value {
+                    color: #666;
+                    display: block;
+                }
+            }
+            .amount {
+                border: 0;
+                font-weight: 400;
+                padding: 6px 0 6px 14px;
+                text-align: right;
+                white-space: nowrap;
+            }
+            .grand {
+                .mark {
+                    font-size: 18px;
+                    border-top: 1px solid #cccccc;
+                    padding-right: 10px;
+                }
+                .amount {
+                    font-size: 18px;
+                    border-top: 1px solid #cccccc;
+                }
+                th,
+                td {
+                    padding: 11px 0;
+                }
             }
         }
     }

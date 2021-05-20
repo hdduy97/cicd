@@ -27,11 +27,8 @@ const Index = () => {
   })
 
   const headers = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json'
+    Authorization: `Bearer ${token}`
   }
-
-  const restUrl = process.env.REACT_APP_RESTURL
 
   const dispatch = useDispatch()
 
@@ -40,7 +37,7 @@ const Index = () => {
 
     dispatch({ type: SHOW_LOADING })
     try {
-      const { data: quoteId } = await axios.post(restUrl + '/carts/mine', {}, { headers })
+      const { data: quoteId } = await axios.post('/carts/mine', {}, { headers })
   
       const cartItem = {
         sku,
@@ -48,7 +45,7 @@ const Index = () => {
         quoteId
       }
   
-      await axios.post(restUrl + '/carts/mine/items', { cartItem }, { headers })
+      await axios.post('/carts/mine/items', { cartItem }, { headers })
   
       dispatch({ type: TRIGGER_RELOAD })
       dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { 
@@ -99,7 +96,7 @@ const Index = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       dispatch({ type: SHOW_LOADING })
-      const { data } = await axios.get(`${restUrl}/products`, {
+      const { data } = await axios.get(`/products`, {
         params: {
           'searchCriteria[filter_groups][0][filters][0][field]': 'category_id',
           'searchCriteria[filter_groups][0][filters][0][value]': id,
@@ -125,7 +122,7 @@ const Index = () => {
     return () => {
       console.log(123)
     }
-  }, [id, dispatch, params, restUrl])
+  }, [id, dispatch, params])
 
   return (
     <div>

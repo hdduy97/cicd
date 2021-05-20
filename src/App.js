@@ -43,6 +43,9 @@ const App = () => {
 
   const customer = useSelector(state => state.customer)
 
+  axios.defaults.baseURL = process.env.REACT_APP_RESTURL
+  axios.defaults.headers.common['Content-Type'] = 'application/json'
+
   useEffect(() => {
     if (customer.id) setIsAuthed(true)
   }, [customer.id])
@@ -54,7 +57,7 @@ const App = () => {
       if (token && token.length > 0) {
         dispatch({ type: SET_TOKEN, payload: token})
         try {
-          const { data: customer } = await axios.get(process.env.REACT_APP_RESTURL + '/customers/me', {
+          const { data: customer } = await axios.get('/customers/me', {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -72,8 +75,8 @@ const App = () => {
 
       try {
         const [{ data: navResponse }, { data: logo }] = await axios.all([
-          axios.get(process.env.REACT_APP_RESTURL + '/categories'),
-          axios.get(process.env.REACT_APP_RESTURL + '/store/logo')
+          axios.get('/categories'),
+          axios.get('/store/logo')
         ])
 
         setCategories(navResponse.children_data)

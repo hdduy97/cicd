@@ -20,8 +20,7 @@ const CartItem = ({ item }) => {
   const dispatch = useDispatch()
 
   const headers = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json'
+    Authorization: `Bearer ${token}`
   }
 
   const onSubmit = async (e) => {
@@ -30,9 +29,9 @@ const CartItem = ({ item }) => {
     dispatch({ type: SHOW_LOADING })
 
     try {
-      const { data: quoteId } = await axios.post(process.env.REACT_APP_RESTURL + '/carts/mine', {}, { headers })
+      const { data: quoteId } = await axios.post('/carts/mine', {}, { headers })
 
-      await axios.put(process.env.REACT_APP_RESTURL + '/carts/mine/items/' + item.item_id, 
+      await axios.put('/carts/mine/items/' + item.item_id, 
         {
           cartItem: {
             qty,
@@ -54,7 +53,7 @@ const CartItem = ({ item }) => {
       dispatch({ type: SHOW_LOADING })
 
       try {
-        await axios.delete(process.env.REACT_APP_RESTURL + '/carts/mine/items/' + item.item_id, { headers })
+        await axios.delete('/carts/mine/items/' + item.item_id, { headers })
         dispatch({ type: TRIGGER_RELOAD })
       } catch (e) {
         dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})

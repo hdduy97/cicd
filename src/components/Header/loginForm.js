@@ -22,9 +22,9 @@ const LoginForm = ({ setShowLoginForm }) => {
     dispatch({ type: SHOW_LOADING })
 
     try {
-      const { data: token } = await axios.post(process.env.REACT_APP_RESTURL + '/integration/customer/token', { username, password })
+      const { data: token } = await axios.post('/integration/customer/token', { username, password })
 
-      const { data: customer } = await axios.get(process.env.REACT_APP_RESTURL + '/customers/me', {
+      const { data: customer } = await axios.get('/customers/me', {
         headers: {
           Authorization: `Bearer ${token}`
         }

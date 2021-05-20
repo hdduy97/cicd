@@ -1,56 +1,43 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import ShippingAddress from './shippingAddress'
+import ShippingMethods from './shippingMethods'
+import PaymentMethod from './paymentMethod'
 import ConditionalComponent from '../../conditionalComponent'
 import './index.scss'
 const Index = () => {
-  const { items, totals } = useSelector(state => state.cart)
+  // Steps
+  // 1. SHIPPING_ADDRESS
+  // 2. SHIPPING_METHOD
+  // 3. PAYMENT
+  // 4. PAYMENT SUCCESS
+  
+  const [step, setStep] = useState(1)
   const [countries, setCountries] = useState([])
-  const [firstname, setFirstname] = useState('')
-  const [lastname, setLastname] = useState('')
-  const [company, setCompany] = useState('')
-  const [street, setStreet] = useState('')
-  const [city, setCity] = useState('')
-  const [countryId, setCountryId] = useState('US')
-  const [telephone, setTelephone] = useState('')
-  const [postcode, setPostcode] = useState('')
-  const [regionCode, setRegionCode] = useState('')
-  const country = countries.find(el => el.id === countryId) || {}
-  const regions = country.available_regions || []
+  const [shippingMethods, setShippingMethods] = useState([])
+  const [paymentMethods, setPaymentMethods] = useState([])
+  const [address, setAddress] = useState({})
+  const [totals, setTotals] = useState({})
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState({})
 
-  const restUrl =  process.env.REACT_APP_RESTURL
-
-  const countriesOption = countries.map(country => (
-    <option key={country.id} value={country.id}>{country.full_name_english}</option>
-  ))
-
-  const regionsOption = regions.map(region => (
-    <option key={region.id} value={region.code}>{region.name}</option>
-  ))
+  const { items } = useSelector(state => state.cart)
+  const token = useSelector(state => state.token)
+  const customer = useSelector(state => state.customer)
 
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const { data } = await axios.get(restUrl + '/directory/countries')
+        const { data } = await axios.get('/directory/countries')
 
         setCountries(data.filter(el => el.full_name_english).sort((a,b) => a.full_name_english > b.full_name_english ? 1 : -1))
-      } catch(e) {
-  
-      }
+      } catch(e) {}
     }
 
     fetchCountries()
-  }, [restUrl])
-
-  useEffect(() => {
-    const country = countries.find(el => el.id === countryId) || {}
-    const regions = country.available_regions || []
-    if (regions.length > 0) setRegionCode(regions[0].code)
-    else setRegionCode('')
-  }, [countryId, countries])
+  }, [])
 
   const itemsRender = items.map(item => {
     return (
@@ -78,97 +65,94 @@ const Index = () => {
   })
 
   return (
-    <div className="checkout">
-      <div className="checkout-block">
-        <div className="checkout-step">
-          <div className="step-title">Shipping Address</div>
-          <form className="form-shipping-address">
-            <div className="form-field">
-              <label>First Name</label>
-              <div className="control">
-                <input type="text" value={firstname} onChange={e => setFirstname(e.target.value)} />
+    <>
+      <ConditionalComponent condition={step < 4}>
+        <div className="checkout">
+          <div className="checkout-block">
+            <ShippingAddress 
+              countries={countries}
+              step={step}
+              setStep={setStep}
+              token={token}
+              customer={customer}
+              setShippingMethods={setShippingMethods}
+              setAddress={setAddress}
+            />
+            <ConditionalComponent condition={step >= 2}>
+              <ShippingMethods 
+                step={step}
+                setStep={setStep}
+                methods={shippingMethods}
+                address={address}
+                token={token}
+                setPaymentMethods={setPaymentMethods}
+                setTotals={setTotals}
+                setSelectedShippingMethod={setSelectedShippingMethod}
+              />
+            </ConditionalComponent>
+            <ConditionalComponent condition={step === 3}>
+              <PaymentMethod methods={paymentMethods} token={token} setStep={setStep} />
+            </ConditionalComponent>
+          </div>
+          <div className="order-summary">
+            <span className="title">Order Summary</span>
+            <ConditionalComponent condition={step === 3}>
+              <table className="table-totals">
+                <tbody>
+                  <tr>
+                    <th className="mark">Cart Subtotal</th>
+                    <td className="amount"><span>${totals.subtotal && totals.subtotal.toFixed(2)}</span></td>
+                  </tr>
+                  <tr>
+                    <th className="mark">
+                      <span>Shipping</span>
+                      <span className="value">{`${selectedShippingMethod.carrier_title} - ${selectedShippingMethod.method_title}`}</span>
+                    </th>
+                    <td className="amount"><span>${totals.shipping_amount && totals.shipping_amount.toFixed(2)}</span></td>
+                  </tr>
+                  <tr className="grand totals">
+                    <th className="mark">
+                      <strong>Order Total</strong>
+                    </th>
+                    <td className="amount">
+                      <strong>
+                        <span>${totals.grand_total && totals.grand_total.toFixed(2)}</span>
+                      </strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ConditionalComponent>
+            <div className="items-in-cart">
+              <span className="title">{`${items.length} Items in Cart`}</span>
+              <div className="minicart-items">
+                <div className="minicart-items-wrapper">
+                  <ol className="minicart-items">
+                    {itemsRender}
+                  </ol>
+                </div>
               </div>
-            </div>
-            <div className="form-field">
-              <label>Last Name</label>
-              <div className="control">
-                <input type="text" value={lastname} onChange={e => setLastname(e.target.value)} />
-              </div>
-            </div>
-            <div className="form-field">
-              <label>Company</label>
-              <div className="control">
-                <input type="text" value={company} onChange={e => setCompany(e.target.value)} />
-              </div>
-            </div>
-            <div className="form-field">
-              <label>Street Address</label>
-              <div className="control">
-                <input type="text" value={street} onChange={e => setStreet(e.target.value)} />
-              </div>
-            </div>
-            <div className="form-field">
-              <label>City</label>
-              <div className="control">
-                <input type="text" value={city} onChange={e => setCity(e.target.value)} />
-              </div>
-            </div>
-            <div className="form-field">
-              <label>State/Province</label>
-              <div className="control">
-              <ConditionalComponent condition={regions.length > 0}>
-                <select value={regionCode} onChange={e => setRegionCode(e.target.value)}>
-                  {regionsOption}
-                </select>
-                <span class="select-icon">
-                  <FontAwesomeIcon icon={faChevronDown} />
-                </span>
-              </ConditionalComponent>
-              <ConditionalComponent condition={regions.length === 0}>
-                <input type="text" value={regionCode} onChange={e => setRegionCode(e.target.value)} />
-              </ConditionalComponent>
-              </div>
-            </div>
-            <div className="form-field">
-              <label>Zip/Postal Code</label>
-              <div className="control">
-                <input type="text" value={postcode} onChange={e => setPostcode(e.target.value)} />
-              </div>
-            </div>
-            <div className="form-field">
-              <label>Country</label>
-              <div className="control">
-                <select value={countryId} onChange={e => setCountryId(e.target.value)}>
-                  {countriesOption}
-                </select>
-                <span class="select-icon">
-                  <FontAwesomeIcon icon={faChevronDown} />
-                </span>
-              </div>
-            </div>
-            <div className="form-field">
-              <label>Phone Number</label>
-              <div className="control">
-                <input type="text" value={telephone} onChange={e => setTelephone(e.target.value)} />
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div className="order-summary">
-        <span className="title">Order Summary</span>
-        <div className="items-in-cart">
-          <span className="title">{`${items.length} Items in Cart`}</span>
-          <div className="minicart-items">
-            <div className="minicart-items-wrapper">
-              <ol className="minicart-items">
-                {itemsRender}
-              </ol>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </ConditionalComponent>
+      <ConditionalComponent condition={step === 4}>
+        <div className="page-title-wrapper">
+          <h1 className="page-title">
+            <span className="base" data-ui-id="page-title-wrapper">Thank you for your purchase!</span>
+          </h1>
+        </div>
+        <div className="checkout-success">
+          <p>Your order number is: <a href={`https://demo.lotustest.net/sales/order/view/order_id/26/`} className="order-number"><strong>000000026</strong></a>.</p>
+          <p>We'll email you an order confirmation with details and tracking info.</p>
+          <div className="actions-toolbar">
+            <div className="primary">
+              <Link className="action primary continue" to="/"><span>Continue Shopping</span></Link>
+            </div>
+          </div>
+        </div>
+      </ConditionalComponent>
+    </>
   )
 }
 
