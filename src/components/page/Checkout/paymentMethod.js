@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { ADD_GLOBAL_MESSAGE, SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD } from '../../../reducers/types'
 
-const PaymentMethod = ({ methods, token, setStep }) => {
+const PaymentMethod = ({ methods, token, setStep, setOrderResponse }) => {
   const [selectedMethod, setSelectedMethod] = useState(methods.length > 0 ? methods[0].code : '')
 
   const paymentMethodsRender = methods.map(method => (
@@ -40,6 +40,9 @@ const PaymentMethod = ({ methods, token, setStep }) => {
         }
       }, { headers })
 
+      const { data } = await axios.get('/customers/me/lastorder', { headers })
+
+      setOrderResponse(data)
       setStep(4)
       dispatch({ type: TRIGGER_RELOAD })
     } catch(e) {

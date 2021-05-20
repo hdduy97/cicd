@@ -16,6 +16,9 @@ import './header.scss'
 const Header = ({ logo }) => {
   const [search, setSearch] = useState('')
   const [isCartShow, setIsCartShow] = useState(false)
+  const [searchTimeout, setSearchTimeout] = useState(null)
+  const [searchProducts, setSearchProducts] = useState([])
+  const [isSearchProductsShow, setIsSearchProductsShow] = useState(false)
   
   const { items, totals, reloadCart } = useSelector(state => state.cart)
   const token = useSelector(state => state.token)
@@ -38,11 +41,61 @@ const Header = ({ logo }) => {
     )
   })
 
+  const searchProductsRender = searchProducts.map(product => (
+    <li key={product.sku} className="item">
+      <span className="product-image-container" style={{ width: '45px' }}>
+        <span className="product-image-wrapper">
+          <img 
+            className="product-image-photo"
+            src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${product.media_gallery_entries[0].file}`}
+            alt={product.name} 
+          />
+        </span>
+      </span>
+      <span className="product-name">{product.name}</span>
+    </li>
+  ))
+
   const history = useHistory()
 
   const onCheckoutBtnClick = () => {
     setIsCartShow(false)
     history.push('/checkout')
+  }
+
+  const onSearchInputChange = (e) => {
+    const { value } = e.target
+    setSearch(value)
+
+    clearTimeout(searchTimeout)
+    setSearchTimeout(null)
+
+    if (value) {
+      setSearchTimeout(setTimeout(async () => {
+        const { data } = await axios.get(`/products`, {
+          params: {
+            'searchCriteria[filter_groups][0][filters][0][field]': 'name',
+            'searchCriteria[filter_groups][0][filters][0][value]': `%${value}%`,
+            'searchCriteria[filter_groups][0][filters][0][condition_type]': 'like',
+            'searchCriteria[filter_groups][0][filters][1][field]': 'sku',
+            'searchCriteria[filter_groups][0][filters][1][value]': `%${value}%`,
+            'searchCriteria[filter_groups][0][filters][1][condition_type]': 'like',
+            'searchCriteria[filter_groups][1][filters][0][field]': 'visibility',
+            'searchCriteria[filter_groups][1][filters][0][value]': '[2,4]',
+            'searchCriteria[filter_groups][1][filters][0][condition_type]': 'in',
+            'searchCriteria[filter_groups][2][filters][0][field]': 'status',
+            'searchCriteria[filter_groups][2][filters][0][value]': '1',
+            'searchCriteria[filter_groups][2][filters][0][condition_type]': 'eq',
+            'searchCriteria[pageSize]': 5
+          }
+        })
+  
+        setIsSearchProductsShow(true)
+        setSearchProducts(data.items)
+      }, 500))
+    } else {
+      setIsSearchProductsShow(false)
+    }
   }
   
   useEffect(() => {
@@ -88,10 +141,19 @@ const Header = ({ logo }) => {
             <input 
               type="text"
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={onSearchInputChange}
               placeholder="Search entire store here..."
             />
           </form>
+          <ConditionalComponent condition={isSearchProductsShow}>
+            <PopupBlock setShowComponent={setIsSearchProductsShow}>
+              <div className="search-products">
+                <ConditionalComponent condition={isSearchProductsShow}>
+                  <ul className="items">{searchProductsRender}</ul>
+                </ConditionalComponent>
+              </div>
+            </PopupBlock>
+          </ConditionalComponent>
         </div>
         <div className="minicart-wrapper">
           <div className="cart" onClick={() => setIsCartShow(!isCartShow)}>

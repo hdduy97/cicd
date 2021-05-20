@@ -22,6 +22,7 @@ const Index = () => {
   const [address, setAddress] = useState({})
   const [totals, setTotals] = useState({})
   const [selectedShippingMethod, setSelectedShippingMethod] = useState({})
+  const [orderResponse, setOrderResponse] = useState({})
 
   const { items } = useSelector(state => state.cart)
   const token = useSelector(state => state.token)
@@ -91,7 +92,7 @@ const Index = () => {
               />
             </ConditionalComponent>
             <ConditionalComponent condition={step === 3}>
-              <PaymentMethod methods={paymentMethods} token={token} setStep={setStep} />
+              <PaymentMethod methods={paymentMethods} token={token} setStep={setStep} setOrderResponse={setOrderResponse} />
             </ConditionalComponent>
           </div>
           <div className="order-summary">
@@ -143,7 +144,7 @@ const Index = () => {
           </h1>
         </div>
         <div className="checkout-success">
-          <p>Your order number is: <a href={`https://demo.lotustest.net/sales/order/view/order_id/26/`} className="order-number"><strong>000000026</strong></a>.</p>
+          <p>Your order number is: <a href={`https://demo.lotustest.net/sales/order/view/order_id/${orderResponse.order_id}/`} className="order-number"><strong>{orderResponse.increment_id}</strong></a>.</p>
           <p>We'll email you an order confirmation with details and tracking info.</p>
           <div className="actions-toolbar">
             <div className="primary">

@@ -18,6 +18,33 @@
     align-items: center;
 }
 
+.block-search {
+    position: relative;
+    .search-products {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 100;
+        background: #fff;
+        width: 100%;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        .item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+                background: #ccc;
+            }
+        }
+        .product-name {
+            padding: 10px;
+        }
+    }
+    input {
+        min-width: 300px;
+    }
+}
+
 .minicart-wrapper {
     margin-left: 15px;
     position: relative;
