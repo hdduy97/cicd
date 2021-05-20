@@ -79,7 +79,7 @@ const Index = () => {
           <div className="price-box price-final_price">
             <span className="price-container price-final_price tax weee">
               <span id="product-price-14" className="price-wrapper ">
-                <span className="price">${product.price}</span>
+                <span className="price">${product.price || 0}</span>
               </span>
             </span>
           </div>                                      
