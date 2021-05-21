@@ -12,6 +12,7 @@ import axios from 'axios'
 
 import Loading from './components/loading'
 import Header from './components/Header'
+import Footer from './components/Footer'
 import Navigation from './components/navigation'
 import GlobalMessage from './components/globalMessage'
 import Home from './components/page/Home'
@@ -117,6 +118,7 @@ const App = () => {
           </Route>
         </Switch>
       </div>
+      <Footer />
     </Router>
   )
 }

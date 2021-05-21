@@ -59,7 +59,7 @@ const Index = () => {
               <label>Qty: {item.qty}</label>
             </div>
           </div>
-          <div className="product-item-pricing"><strong>${item.price.toFixed(2)}</strong></div>
+          <div className="product-item-pricing"><strong>${(item.qty * item.price).toFixed(2)}</strong></div>
         </div>
       </li>
     )
@@ -103,6 +103,10 @@ const Index = () => {
                   <tr>
                     <th className="mark">Cart Subtotal</th>
                     <td className="amount"><span>${totals.subtotal && totals.subtotal.toFixed(2)}</span></td>
+                  </tr>
+                  <tr>
+                    <th className="mark">Discount</th>
+                    <td className="amount"><span>-${totals.discount_amount && Math.abs(totals.discount_amount).toFixed(2)}</span></td>
                   </tr>
                   <tr>
                     <th className="mark">

@@ -1,5 +1,12 @@
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .container {
     max-width: 1280px;
+    width: 100%;
     margin: 0 auto 20px;
     padding: 20px 20px 0;
 }
@@ -140,6 +147,18 @@ fieldset {
         top: 22px;
         width: 45px;
         position: absolute;
+        text-align: center;
+    }
+}
+
+.page-footer {
+    margin-top: auto;
+    .copyright {
+        background-color: #6e716e;
+        color: #ffffff;
+        box-sizing: border-box;
+        display: block;
+        padding: 10px;
         text-align: center;
     }
 }

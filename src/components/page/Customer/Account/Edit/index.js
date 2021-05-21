@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 
 import Layout from '../layout'
@@ -22,6 +23,7 @@ const Index = () => {
   const [changePassword, setChangePassword] = useState(false)
 
   const dispatch = useDispatch()
+  const history = useHistory()
   
   const showMessage = (isSuccess, message) => {
     dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess, message }})
@@ -87,6 +89,7 @@ const Index = () => {
               
               const [{ data: customerResponse }] = await axios.all([changeAccountInformation(customerData), changePasswordAxios])
   
+              history.push('/customer/account')
               dispatch({ type: SET_CUSTOMER, payload: customerResponse })
               showSuccessMessage('You saved the account information.')
             } catch (e) {
@@ -94,10 +97,14 @@ const Index = () => {
             }
           }
         } else {
-          const { data: customerResponse } = await changeAccountInformation(customerData)
-
-          dispatch({ type: SET_CUSTOMER, payload: customerResponse })
-          showSuccessMessage('You saved the account information.')
+          try {
+            const { data: customerResponse } = await changeAccountInformation(customerData)
+            history.push('/customer/account')
+            dispatch({ type: SET_CUSTOMER, payload: customerResponse })
+            showSuccessMessage('You saved the account information.')
+          } catch (e)  {
+            showErrorMessage(e.response.data.message)
+          }
         }
       }
     } catch (e) {
