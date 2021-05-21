@@ -104,10 +104,12 @@ const Index = () => {
                     <th className="mark">Cart Subtotal</th>
                     <td className="amount"><span>${totals.subtotal && totals.subtotal.toFixed(2)}</span></td>
                   </tr>
-                  <tr>
-                    <th className="mark">Discount</th>
-                    <td className="amount"><span>-${totals.discount_amount && Math.abs(totals.discount_amount).toFixed(2)}</span></td>
-                  </tr>
+                  <ConditionalComponent condition={totals.discount_amount < 0}>
+                    <tr>
+                      <th className="mark">Discount</th>
+                      <td className="amount"><span>-${totals.discount_amount && Math.abs(totals.discount_amount).toFixed(2)}</span></td>
+                    </tr>
+                  </ConditionalComponent>
                   <tr>
                     <th className="mark">
                       <span>Shipping</span>
