@@ -28,6 +28,8 @@ const Index = () => {
   const token = useSelector(state => state.token)
   const customer = useSelector(state => state.customer)
 
+  const totalCartItems = items.reduce((a,b) => a + b.qty, 0)
+
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -131,7 +133,7 @@ const Index = () => {
               </table>
             </ConditionalComponent>
             <div className="items-in-cart">
-              <span className="title">{`${items.length} Items in Cart`}</span>
+              <span className="title">{`${totalCartItems} Items in Cart`}</span>
               <div className="minicart-items">
                 <div className="minicart-items-wrapper">
                   <ol className="minicart-items">
