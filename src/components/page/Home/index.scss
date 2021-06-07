@@ -1,0 +1,30 @@
+.content-heading {
+    text-align: center;
+    margin: 10px 0 25px;
+    position: relative;
+    &::before {
+        content: '';
+        display: block;
+        height: 1px;
+        width: 100%;
+        background: -moz-radial-gradient(center, ellipse cover, #fff 25%, #cecece 100%);
+        background: -webkit-gradient(radial, center center, 0, center center, 100%, color-stop(25%, #fff), color-stop(100%, #cecece));
+        background: -webkit-radial-gradient(center, ellipse cover, #fff 25%, #cecece 100%);
+        background: -ms-radial-gradient(center, ellipse cover, #fff 25%, #cecece 100%);
+        background: radial-gradient(ellipse at center, #fff 25%, #cecece 100%);
+        position: absolute;
+        top: 50%;
+        z-index: 0;
+    }
+    .title {
+        font-size: 38px;
+        position: relative;
+        z-index: 1;
+        margin: 0 0 5px;
+        font-weight: 300;
+    }
+    .info {
+        font-size: 18px;
+        font-weight: 300;
+    }
+}

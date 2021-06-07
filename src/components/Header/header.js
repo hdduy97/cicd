@@ -143,7 +143,9 @@ const Header = ({ logo }) => {
           axios.get('/carts/mine/totals', { headers })
         ])
 
-        dispatch({ type: SET_CART, payload: {items, totals} })
+        if (Array.isArray(items)) {
+          dispatch({ type: SET_CART, payload: {items, totals} })
+        }
       } catch(e) {
         dispatch({ type: RESET_CART })
       }
