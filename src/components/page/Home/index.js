@@ -40,9 +40,9 @@ const Index = () => {
     <div className="empty-content">
       {parse(content)}
       <ConditionalComponent condition={bestSellers.length > 0}>
-        <div class="content-heading">
-          <h2 class="title">Hot Sellers</h2>
-          <p class="info">Here is what`s trending on Luma right now</p>
+        <div className="content-heading">
+          <h2 className="title">Hot Sellers</h2>
+          <p className="info">Here is what`s trending on Luma right now</p>
         </div>
         <div className="products wrapper grid products-grid">
           <ProductGrid products={bestSellers} />

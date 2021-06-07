@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 
-import { ADD_GLOBAL_MESSAGE, SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD } from '../../../reducers/types'
+import { ADD_GLOBAL_MESSAGE, SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, SET_CUSTOMER } from '../../../reducers/types'
 
 const PaymentMethod = ({ methods, token, setStep, setOrderResponse }) => {
   const [selectedMethod, setSelectedMethod] = useState(methods.length > 0 ? methods[0].code : '')
@@ -40,11 +40,14 @@ const PaymentMethod = ({ methods, token, setStep, setOrderResponse }) => {
         }
       }, { headers })
 
-      const { data } = await axios.get('/customers/me/lastorder', { headers })
+      const orderRequest = axios.get('/customers/me/lastorder', { headers })
+      const customerRequest = axios.get('/customers/me', { headers })
+      const [{ data: orderResponse }, { data: customerResponse}] = await axios.all([orderRequest, customerRequest])
 
-      setOrderResponse(data)
+      setOrderResponse(orderResponse)
       setStep(4)
       dispatch({ type: TRIGGER_RELOAD })
+      dispatch({ type: SET_CUSTOMER, payload: customerResponse })
     } catch(e) {
       dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})
       dispatch({ type: HIDE_LOADING })
