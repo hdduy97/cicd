@@ -8,8 +8,6 @@ import ProductGrid from '../../productGrid'
 import ConditionalComponent from '../../conditionalComponent'
 import { SHOW_LOADING, HIDE_LOADING, ADD_GLOBAL_MESSAGE } from '../../../reducers/types'
 
-import './index.scss'
-
 const Index = () => {
   const limit = [12,24,36]
   const limitRender = limit.map(el => (

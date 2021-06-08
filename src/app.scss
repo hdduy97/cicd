@@ -39,6 +39,12 @@ select:not([disabled]):focus {
     }
 }
 
+button.action:disabled {
+    background: #6e716e;
+    border-color: #6e716e;
+    cursor: auto;
+}
+
 .table-wrapper {
     margin-bottom: 20px;
     border-bottom: 1px solid #e4e4e4;

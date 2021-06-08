@@ -30,7 +30,15 @@
 
 .product-image-container {
     display: inline-block;
+    position: relative;
     max-width: 100%;
+}
+
+.product-image-out-of-stock {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
 }
 
 .product-image-wrapper {

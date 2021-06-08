@@ -5,6 +5,8 @@ import { useSelector,useDispatch } from 'react-redux'
 import ConditionalComponent from './conditionalComponent'
 import { SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, ADD_GLOBAL_MESSAGE, SET_QUOTE_ID } from '../reducers/types'
 
+import './productGrid.scss'
+
 const ProductGrid = ({ products }) => {
   const [selectedSwatch, setSelectedSwatch] = useState({})
 
@@ -118,6 +120,11 @@ const ProductGrid = ({ products }) => {
       <li key={product.id} className="item product product-item">
         <div className="product-item-info">
           <span className="product-image-container" style={{width: '240px'}}>
+            <ConditionalComponent condition={!product.extension_attributes.is_in_stock}>
+              <span className="product-image-out-of-stock">
+                <img src='/sold-out.png' alt="out-of-stock" width="75" height="auto" /> 
+              </span>
+            </ConditionalComponent>
             <span className="product-image-wrapper">
               <img 
                 className="product-image-photo"
@@ -151,7 +158,12 @@ const ProductGrid = ({ products }) => {
               <div className="product actions product-item-actions">
                 <div className="actions-primary">
                   <form onSubmit={(e) => onSubmit(e, product)}>
-                    <button type="submit" title="Add to Cart" className="action tocart primary">
+                    <button 
+                      type="submit" 
+                      title="Add to Cart" 
+                      className="action tocart primary"
+                      disabled={!product.extension_attributes.is_in_stock}
+                    >
                       <span>Add to Cart</span>
                     </button>
                   </form>
