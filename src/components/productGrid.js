@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useSelector,useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import ConditionalComponent from './conditionalComponent'
 import { SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, ADD_GLOBAL_MESSAGE, SET_QUOTE_ID } from '../reducers/types'
@@ -109,7 +110,9 @@ const ProductGrid = ({ products }) => {
       })
       return (
         <div className={`swatch-attribute ${option.label.toLowerCase()}`} key={option.id}>
-          {swatchValuesRender}
+          <div className="swatch-attribute-options">
+            {swatchValuesRender}
+          </div>
         </div>
       )
     })
@@ -125,16 +128,18 @@ const ProductGrid = ({ products }) => {
                 <img src='/sold-out.png' alt="out-of-stock" width="75" height="auto" /> 
               </span>
             </ConditionalComponent>
-            <span className="product-image-wrapper">
-              <img 
-                className="product-image-photo"
-                src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${product.media_gallery_entries[0].file}`} 
-                alt={product.name} 
-                width="216"
-                height="269"
-                style={imgStyle}
-              />
-            </span>
+            <Link to={`/product/${product.sku}`}>
+              <span className="product-image-wrapper">
+                <img 
+                  className="product-image-photo"
+                  src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${product.media_gallery_entries[0].file}`} 
+                  alt={product.name} 
+                  width="216"
+                  height="269"
+                  style={imgStyle}
+                />
+              </span>
+            </Link>
           </span>
           <div className="product details product-item-details">
             <div className="product name product-item-name">

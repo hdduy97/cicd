@@ -16,6 +16,7 @@ const Index = () => {
     </option>
   ))
   
+  const [loaded, setLoaded] = useState(false)
   const [products, setProducts] = useState([])
   const [totalCount, setTotalCount] = useState(0)
   const { id } = useParams()
@@ -52,6 +53,7 @@ const Index = () => {
       } catch(e) {
         dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})
       }
+      setLoaded(true)
 
       dispatch({ type: HIDE_LOADING })
     }
@@ -72,7 +74,7 @@ const Index = () => {
           limitRender={limitRender}
         /> 
       </ConditionalComponent>
-      <ConditionalComponent condition={products.length === 0}>
+      <ConditionalComponent condition={products.length === 0 && loaded}>
         <div className="empty-content">
           Products not found
         </div>
