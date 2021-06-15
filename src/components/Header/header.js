@@ -9,7 +9,7 @@ import ConditionalComponent from '../conditionalComponent'
 import PopupBlock from '../popupBlock'
 import CartItem from './cartItem'
 
-import { SHOW_LOADING, HIDE_LOADING, SET_CART, RESET_CART, ADD_GLOBAL_MESSAGE, TRIGGER_RELOAD, SET_QUOTE_ID } from '../../reducers/types'
+import { HIDE_LOADING, SET_CART, RESET_CART } from '../../reducers/types'
 
 import './header.scss'
 
@@ -20,9 +20,8 @@ const Header = ({ logo }) => {
   const [searchProducts, setSearchProducts] = useState([])
   const [isSearchProductsShow, setIsSearchProductsShow] = useState(false)
   
-  const { items, totals, reloadCart } = useSelector(state => state.cart)
+  const { items, totals, reloadCart, guestCartId } = useSelector(state => state.cart)
   const token = useSelector(state => state.token)
-  const { quoteId: quoteIdState } = useSelector(state => state.cart)
 
   const dispatch = useDispatch()
 
@@ -40,41 +39,8 @@ const Header = ({ logo }) => {
     )
   })
 
-  const headers = {
-    Authorization: `Bearer ${token}`
-  }
-
-  const addToCart = async ({ sku, name }) => {
-    dispatch({ type: SHOW_LOADING })
-    try {
-      let quoteId = quoteIdState
-      if (!quoteId) {
-        const { data } = await axios.post('/carts/mine', {}, { headers })
-
-        dispatch({ type: SET_QUOTE_ID, payload: data })
-        quoteId = data
-      }
-      const cartItem = {
-        sku,
-        qty: 1,
-        quoteId
-      }
-  
-      await axios.post('/carts/mine/items', { cartItem }, { headers })
-  
-      dispatch({ type: TRIGGER_RELOAD })
-      dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { 
-        isSuccess: true, 
-        message: `You added ${name} to your shopping cart`
-      }})
-    } catch(e) {
-      dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})
-      dispatch({ type: HIDE_LOADING })
-    }
-  }
-
   const searchProductsRender = searchProducts.map(product => (
-    <li key={product.sku} className="item" onClick={() => addToCart(product)}>
+    <li key={product.sku} className="item">
       <span className="product-image-container" style={{ width: '45px' }}>
         <span className="product-image-wrapper">
           <img 
@@ -132,15 +98,22 @@ const Header = ({ logo }) => {
   }
   
   useEffect(() => {
-    const headers = {
+    const headers = guestCartId ? {} : {
       Authorization: `Bearer ${token}`
     }
+
+    let cartEndpoint = '/carts/mine'
+    if (guestCartId) {
+      cartEndpoint = `/guest-carts/${guestCartId}`
+    }
+    const cartItemsEndpoint = cartEndpoint + '/items'
+    const cartTotalsEndpoint = cartEndpoint + '/totals'
 
     const fetchCartItems = async () => {
       try {
         const [{ data: items }, { data: totals }] = await axios.all([
-          axios.get('/carts/mine/items', { headers }),
-          axios.get('/carts/mine/totals', { headers })
+          axios.get(cartItemsEndpoint, { headers }),
+          axios.get(cartTotalsEndpoint, { headers })
         ])
 
         if (Array.isArray(items)) {
@@ -153,8 +126,8 @@ const Header = ({ logo }) => {
       dispatch({ type: HIDE_LOADING })
     }
 
-    if (token) fetchCartItems()
-  }, [token, reloadCart, dispatch])
+    if (guestCartId || token) fetchCartItems()
+  }, [token, reloadCart, dispatch, guestCartId])
 
   if (!logo || !logo.src) return null
 

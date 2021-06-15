@@ -22,11 +22,17 @@ const Index = () => {
   const [address, setAddress] = useState({})
   const [totals, setTotals] = useState({})
   const [selectedShippingMethod, setSelectedShippingMethod] = useState({})
-  const [orderResponse, setOrderResponse] = useState({})
+  const [incrementId, setIncrementId] = useState({})
+  const [guestEmail, setGuestEmail] = useState('')
 
-  const { items } = useSelector(state => state.cart)
+  const { items, guestCartId } = useSelector(state => state.cart)
   const token = useSelector(state => state.token)
   const customer = useSelector(state => state.customer)
+
+  const cartsMineEndpoint = customer.id ? '/carts/mine' : `/guest-carts/${guestCartId}`
+  const headers = customer.id ? {
+    Authorization: `Bearer ${token}`
+  } : {}
 
   const totalCartItems = items.reduce((a,b) => a + b.qty, 0)
 
@@ -76,10 +82,12 @@ const Index = () => {
               countries={countries}
               step={step}
               setStep={setStep}
-              token={token}
               customer={customer}
               setShippingMethods={setShippingMethods}
               setAddress={setAddress}
+              cartsMineEndpoint={cartsMineEndpoint}
+              headers={headers}
+              setGuestEmail={setGuestEmail}
             />
             <ConditionalComponent condition={step >= 2}>
               <ShippingMethods 
@@ -87,14 +95,22 @@ const Index = () => {
                 setStep={setStep}
                 methods={shippingMethods}
                 address={address}
-                token={token}
+                headers={headers}
                 setPaymentMethods={setPaymentMethods}
                 setTotals={setTotals}
                 setSelectedShippingMethod={setSelectedShippingMethod}
+                cartsMineEndpoint={cartsMineEndpoint}
               />
             </ConditionalComponent>
             <ConditionalComponent condition={step === 3}>
-              <PaymentMethod methods={paymentMethods} token={token} setStep={setStep} setOrderResponse={setOrderResponse} />
+              <PaymentMethod 
+                methods={paymentMethods}
+                headers={headers}
+                setStep={setStep}
+                setIncrementId={setIncrementId}
+                cartsMineEndpoint={cartsMineEndpoint}
+                guestEmail={guestEmail}
+              />
             </ConditionalComponent>
           </div>
           <div className="order-summary">
@@ -152,7 +168,7 @@ const Index = () => {
           </h1>
         </div>
         <div className="checkout-success">
-          <p>Your order number is: <Link to="sales/order/history" className="order-number"><strong>{orderResponse.increment_id}</strong></Link>.</p>
+          <p>Your order number is: <Link to="sales/order/history" className="order-number"><strong>{incrementId}</strong></Link>.</p>
           <p>We'll email you an order confirmation with details and tracking info.</p>
           <div className="actions-toolbar">
             <div className="primary">

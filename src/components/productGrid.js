@@ -4,7 +4,7 @@ import { useSelector,useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import ConditionalComponent from './conditionalComponent'
-import { SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, ADD_GLOBAL_MESSAGE, SET_QUOTE_ID } from '../reducers/types'
+import { SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, ADD_GLOBAL_MESSAGE, SET_QUOTE_ID, SET_GUEST_CART_ID } from '../reducers/types'
 
 import './productGrid.scss'
 
@@ -13,6 +13,7 @@ const ProductGrid = ({ products }) => {
 
   const token = useSelector(state => state.token)
   const { quoteId: quoteIdState } = useSelector(state => state.cart)
+  const { guestCartId } = useSelector(state => state.cart)
 
   const headers = {
     Authorization: `Bearer ${token}`
@@ -26,20 +27,34 @@ const ProductGrid = ({ products }) => {
     dispatch({ type: SHOW_LOADING })
     try {
       let quoteId = quoteIdState
-      if (!quoteId) {
-        const { data } = await axios.post('/carts/mine', {}, { headers })
-
-        dispatch({ type: SET_QUOTE_ID, payload: data })
-        quoteId = data
+      let cartEndpoint = '/carts/mine/items'
+      if (token) {
+        if (!quoteId) {
+          const { data } = await axios.post('/carts/mine', {}, { headers })
+  
+          dispatch({ type: SET_QUOTE_ID, payload: data })
+          quoteId = data
+        }
+      } else {
+        if (guestCartId) {
+          quoteId = guestCartId
+        } else if (!token && !guestCartId) {
+          const { data } = await axios.post('/guest-carts')
+  
+          quoteId = data
+          dispatch({ type: SET_GUEST_CART_ID, payload: data })
+        }
+        cartEndpoint = `/guest-carts/${quoteId}/items`
       }
+
       const cartItem = {
-        sku,
+        sku: sku,
         qty: 1,
         quoteId
       }
 
       if (type_id === 'configurable') {
-        const configurable_item_options = (Object.keys(selectedSwatch[sku]) || {}).map(swatch => ({
+        const configurable_item_options = (Object.keys(selectedSwatch[sku]) || []).map(swatch => ({
           option_id: swatch,
           option_value: selectedSwatch[sku][swatch]
         }))
@@ -49,7 +64,7 @@ const ProductGrid = ({ products }) => {
         }
       }
   
-      await axios.post('/carts/mine/items', { cartItem }, { headers })
+      await axios.post(cartEndpoint, { cartItem }, { headers })
   
       dispatch({ type: TRIGGER_RELOAD })
       dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { 

@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 
-import { ADD_GLOBAL_MESSAGE, SHOW_LOADING, HIDE_LOADING, TRIGGER_RELOAD, SET_CUSTOMER } from '../../../reducers/types'
+import { ADD_GLOBAL_MESSAGE, SHOW_LOADING, HIDE_LOADING, RESET_CART, SET_CUSTOMER } from '../../../reducers/types'
 
-const PaymentMethod = ({ methods, token, setStep, setOrderResponse }) => {
+const PaymentMethod = ({ methods, headers, setStep, setIncrementId, cartsMineEndpoint, guestEmail }) => {
   const [selectedMethod, setSelectedMethod] = useState(methods.length > 0 ? methods[0].code : '')
 
   const paymentMethodsRender = methods.map(method => (
@@ -24,34 +24,36 @@ const PaymentMethod = ({ methods, token, setStep, setOrderResponse }) => {
 
   const dispatch = useDispatch()
 
-  const headers = {
-    Authorization: `Bearer ${token}`
-  }
-
   const onSubmit = async (e) => {
     e.preventDefault()
 
     dispatch({ type: SHOW_LOADING })
 
     try {
-      await axios.post('/carts/mine/payment-information', {
+      const paymentData = {
         paymentMethod: {
           method: selectedMethod
         }
-      }, { headers })
+      }
+      if (guestEmail.length > 0) paymentData.email = guestEmail
 
-      const orderRequest = axios.get('/customers/me/lastorder', { headers })
-      const customerRequest = axios.get('/customers/me', { headers })
-      const [{ data: orderResponse }, { data: customerResponse}] = await axios.all([orderRequest, customerRequest])
+      const { data: orderId } = await axios.post(`${cartsMineEndpoint}/payment-information`, paymentData, { headers })
+      const { data: incrementId } = await axios.get(`orders/${orderId}/incrementId`)
 
-      setOrderResponse(orderResponse)
+      setIncrementId(incrementId)
+
+      if (headers.authorization) {
+        const { data: customerResponse } = await axios.get('/customers/me', { headers })
+        dispatch({ type: SET_CUSTOMER, payload: customerResponse })
+      }
+
       setStep(4)
-      dispatch({ type: TRIGGER_RELOAD })
-      dispatch({ type: SET_CUSTOMER, payload: customerResponse })
+      dispatch({ type: RESET_CART })
     } catch(e) {
       dispatch({ type: ADD_GLOBAL_MESSAGE, payload: { isSuccess: false, message: e.response.data.message }})
-      dispatch({ type: HIDE_LOADING })
     }
+    
+    dispatch({ type: HIDE_LOADING })
   }
   
   return (

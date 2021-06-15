@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import Cookie from 'js-cookie'
 
-import { ADD_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING, SET_QUOTE_ID } from '../../reducers/types'
+import { ADD_GLOBAL_MESSAGE, SET_TOKEN, SET_CUSTOMER, SHOW_LOADING, HIDE_LOADING, SET_QUOTE_ID, SET_GUEST_CART_ID } from '../../reducers/types'
 
 const LoginForm = ({ setShowLoginForm }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const { guestCartId } = useSelector(state => state.cart)
 
   const dispatch = useDispatch()
   
@@ -29,6 +32,16 @@ const LoginForm = ({ setShowLoginForm }) => {
       const getCustomer = axios.get('/customers/me', { headers })
       const getQuoteId = axios.post('/carts/mine', {}, { headers } )
       const [{ data: customer }, { data: quoteId }] = await axios.all([getCustomer, getQuoteId])
+
+      if (guestCartId) {
+        await axios.put(`/guest-carts/${guestCartId}`, {
+          customerId: customer.id,
+          storeId: 1
+        }, { headers })
+
+        dispatch({ type: SET_GUEST_CART_ID, payload: null })
+        Cookie.remove('guest-cart-id')
+      }
 
       showSuccessMessage('Successfully logged in')
 

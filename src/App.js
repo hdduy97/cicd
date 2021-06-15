@@ -26,7 +26,7 @@ import NewsletterManage from './components/page/Newsletter/Manage'
 import Checkout from './components/page/Checkout'
 import './app.scss'
 
-import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN, HIDE_LOADING, SET_QUOTE_ID } from './reducers/types'
+import { SET_CUSTOMER, RESET_TOKEN, RESET_CUSTOMER, SET_TOKEN, HIDE_LOADING, SET_QUOTE_ID, SET_GUEST_CART_ID } from './reducers/types'
 
 const App = () => {
   const [isAuthed, setIsAuthed] = useState(true)
@@ -53,6 +53,7 @@ const App = () => {
 
   useEffect(() => {
     const token = Cookie.get('token')
+    const guestCartId = Cookie.get('guest-cart-id')
 
     const getDataInfo = async () => {
       if (token && token.length > 0) {
@@ -72,6 +73,10 @@ const App = () => {
         }
       } else {
         setIsAuthed(false)
+      }
+
+      if (guestCartId) {
+        dispatch({ type: SET_GUEST_CART_ID, payload: guestCartId })
       }
 
       try {
@@ -106,7 +111,7 @@ const App = () => {
           <AuthRoute path="/customer/account/edit" component={CustomerAccountEdit} authed={isAuthed} />
           <AuthRoute path="/customer/account" component={CustomerAccount} authed={isAuthed} />
           <AuthRoute path="/sales/order/history" component={SalesOrderHistory} authed={isAuthed} />
-          <AuthRoute path="/checkout" component={Checkout} authed={isAuthed} />
+          <Route path="/checkout" component={Checkout} />
           <Route path="/category/:id">
             <Category />
           </Route>

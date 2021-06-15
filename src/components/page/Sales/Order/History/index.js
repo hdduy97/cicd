@@ -39,10 +39,10 @@ const Index = () => {
       <td data-th="Order Total" className="col total"><span className="price">${ order.base_grand_total.toFixed(2) }</span></td>
       <td data-th="Status" className="col status">{ order.status }</td>
       <td data-th="Actions" className="col actions">
-        <a href={`https://demo.lotustest.net/sales/order/view/order_id/${order.entity_id}/`} className="action view">
+        <a href={`https://demo242.lotustest.net/sales/order/view/order_id/${order.entity_id}/`} className="action view">
           <span>View Order</span>
         </a>
-        <a href={`https://demo.lotustest.net/sales/order/view/order_id/${order.entity_id}/`} data-post="{&quot;action&quot;:&quot;https:\/\/demo.lotustest.net\/sales\/order\/reorder\/order_id\/4\/&quot;,&quot;data&quot;:{&quot;uenc&quot;:&quot;aHR0cHM6Ly9kZW1vLmxvdHVzdGVzdC5uZXQvc2FsZXMvb3JkZXIvaGlzdG9yeS8,&quot;}}" className="action order">
+        <a href={`https://demo242.lotustest.net/sales/order/view/order_id/${order.entity_id}/`} data-post="{&quot;action&quot;:&quot;https:\/\/demo.lotustest.net\/sales\/order\/reorder\/order_id\/4\/&quot;,&quot;data&quot;:{&quot;uenc&quot;:&quot;aHR0cHM6Ly9kZW1vLmxvdHVzdGVzdC5uZXQvc2FsZXMvb3JkZXIvaGlzdG9yeS8,&quot;}}" className="action order">
           <span>Reorder</span>
         </a>
       </td>

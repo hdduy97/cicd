@@ -8,7 +8,7 @@ import ConditionalComponent from '../../conditionalComponent'
 
 import { ADD_GLOBAL_MESSAGE, SHOW_LOADING, HIDE_LOADING } from '../../../reducers/types'
 
-const ShippingMethods = ({ step, setStep, methods, address, token, setPaymentMethods, setTotals, setSelectedShippingMethod }) => {
+const ShippingMethods = ({ step, setStep, methods, address, headers, setPaymentMethods, setTotals, setSelectedShippingMethod, cartsMineEndpoint }) => {
   const [selectedMethod, setSelectedMethod] = useState(methods[0])
 
   const dispatch = useDispatch()
@@ -30,17 +30,13 @@ const ShippingMethods = ({ step, setStep, methods, address, token, setPaymentMet
     </tr>
   ))
 
-  const headers = {
-    Authorization: `Bearer ${token}`
-  }
-
   const onSubmit = async (e) => {
     e.preventDefault()
 
     dispatch({ type: SHOW_LOADING })
 
     try {
-      const { data } = await axios.post('/carts/mine/shipping-information', {
+      const { data } = await axios.post(`${cartsMineEndpoint}/shipping-information`, {
         addressInformation: {
           shippingAddress: address,
           billingAddress: address,

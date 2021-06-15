@@ -4,6 +4,28 @@
     & > div {
         flex: 0 0 48%;
     }
+    .action.primary {
+        padding: 14px 17px;
+        font-size: 18px;
+        width: 49%;
+    }
+    .qty {
+        display: flex;
+        flex-direction: column;
+        input {
+            width: 54px;
+            text-align: center;
+        }
+    }
+    .field {
+        margin-bottom: 20px;
+        label {
+            margin-bottom: 8px;
+        }
+        .swatch-attribute {
+            margin-bottom: 10px;
+        }
+    }
 }
 
 .product-name {

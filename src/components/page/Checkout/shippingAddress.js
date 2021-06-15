@@ -8,7 +8,7 @@ import ConditionalComponent from '../../conditionalComponent'
 
 import { ADD_GLOBAL_MESSAGE, SHOW_LOADING, HIDE_LOADING } from '../../../reducers/types'
 
-const ShippingAddress = ({ countries, step, setStep, token, customer, setShippingMethods, setAddress }) => {
+const ShippingAddress = ({ countries, step, setStep, customer, setShippingMethods, setAddress, cartsMineEndpoint, headers, setGuestEmail }) => {
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
   const [company, setCompany] = useState('')
@@ -18,10 +18,11 @@ const ShippingAddress = ({ countries, step, setStep, token, customer, setShippin
   const [telephone, setTelephone] = useState('')
   const [postcode, setPostcode] = useState('')
   const [regionCode, setRegionCode] = useState('')
+  const [email, setEmail] = useState('')
 
   const country = countries.find(el => el.id === countryId) || {}
   const regions = country.available_regions || []
-  const addresses = customer.addresses
+  const addresses = customer.addresses || []
   const onAddressClick = ({ firstname, lastname, company, street, country_id, city, region, postcode, telephone }) => {
     setFirstname(firstname)
     setLastname(lastname)
@@ -49,10 +50,6 @@ const ShippingAddress = ({ countries, step, setStep, token, customer, setShippin
   const countriesOption = countries.map(country => (
     <option key={country.id} value={country.id}>{country.full_name_english}</option>
   ))
-
-  const headers = {
-    Authorization: `Bearer ${token}`
-  }
 
   const dispatch = useDispatch()
 
@@ -83,15 +80,16 @@ const ShippingAddress = ({ countries, step, setStep, token, customer, setShippin
         lastname,
         telephone,
         company,
-        email: customer.email,
+        email: customer.email ? customer.email : email,
         same_as_billing: 1
       }
 
-      if (customer.addresses.length === 0) {
+      if (addresses.length === 0) {
         address.save_in_address_book = 1
       }
 
-      const { data } = await axios.post('/carts/mine/estimate-shipping-methods', { address }, { headers })
+      const { data } = await axios.post(`${cartsMineEndpoint}/estimate-shipping-methods`, { address }, { headers })
+      setGuestEmail(email)
       setShippingMethods(data.filter(el => el.available).sort((a,b) => a.amount - b.amount))
       setAddress(address)
       setStep(2)
@@ -123,7 +121,7 @@ const ShippingAddress = ({ countries, step, setStep, token, customer, setShippin
   }, [countries])
 
   useEffect(() => {
-    const defaultAddress = customer.addresses.find(address => address.default_shipping)
+    const defaultAddress = (customer.addresses || []).find(address => address.default_shipping)
 
     if (defaultAddress) {
       setFirstname(defaultAddress.firstname)
@@ -149,6 +147,14 @@ const ShippingAddress = ({ countries, step, setStep, token, customer, setShippin
       <ConditionalComponent condition={step === 1}>
         <form className="form-shipping-address" onSubmit={onSubmit}>
           <ConditionalComponent condition={addresses.length === 0}>
+            <ConditionalComponent condition={!customer.id}>
+              <div className="form-field">
+                <label>Email</label>
+                <div className="control">
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                </div>
+              </div>
+            </ConditionalComponent>
             <div className="form-field">
               <label>First Name</label>
               <div className="control">
