@@ -68,7 +68,7 @@ const Panel = () => {
   const headerGuest = (
     <ul className="header links">
       <li className="account-action">
-        <span onClick={() => setShowLoginForm(true)}>Log In</span>
+        <span onClick={() => setShowLoginForm(true)}>Sign In</span>
         {loginFormRender}
       </li>
       <li>or</li>

@@ -138,8 +138,6 @@ const Index = () => {
         
         const { data } = await axios.get(`/products/${sku}`)
         setProduct(data)
-
-        console.log(data)
       } catch(e) {
 
       }
@@ -182,7 +180,11 @@ const Index = () => {
               <input value={qty} onChange={e => setQty(e.target.value)} type="number" />
             </div>
             <div className="product-actions">
-              <button className="action primary" type="submit">Add to Cart</button>
+              <button
+                className="action primary"
+                type="submit"
+                disabled={!product.extension_attributes.is_in_stock}
+              >Add to Cart</button>
             </div>
           </form>
         </div>
