@@ -24,6 +24,12 @@
     margin-top: 10px;
 }
 
+.product-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .product.name {
     font-weight: 500;
 }

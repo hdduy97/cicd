@@ -174,21 +174,21 @@ const ProductGrid = ({ products }) => {
                 {swatchRender}
               </div>
             </ConditionalComponent>
-            <div className="product-item-inner">
-              <div className="product actions product-item-actions">
-                <div className="actions-primary">
-                  <form onSubmit={(e) => onSubmit(e, product)}>
-                    <button 
-                      type="submit" 
-                      title="Add to Cart" 
-                      className="action tocart primary"
-                      disabled={!product.extension_attributes.is_in_stock}
-                    >
-                      <span>Add to Cart</span>
-                    </button>
-                  </form>
-                </div>
-              </div>
+          </div>
+        </div>
+        <div className="product-item-inner">
+          <div className="product actions product-item-actions">
+            <div className="actions-primary">
+              <form onSubmit={(e) => onSubmit(e, product)}>
+                <button 
+                  type="submit" 
+                  title="Add to Cart" 
+                  className="action tocart primary"
+                  disabled={!product.extension_attributes.is_in_stock}
+                >
+                  <span>Add to Cart</span>
+                </button>
+              </form>
             </div>
           </div>
         </div>

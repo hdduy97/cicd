@@ -39,21 +39,34 @@ const Header = ({ logo }) => {
     )
   })
 
-  const searchProductsRender = searchProducts.map(product => (
-    <li key={product.sku} className="item">
-      <span className="product-image-container" style={{ width: '45px' }}>
-        <span className="product-image-wrapper">
-          <img 
-            className="product-image-photo"
-            src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${product.media_gallery_entries[0].file}`}
-            alt={product.name} 
-          />
-        </span>
-      </span>
-      <span className="product-name">{product.name}</span>
-      <span className="product-price"><strong>${product.price && product.price.toFixed(2)}</strong></span>
-    </li>
-  ))
+  const onProductSearchClick = () => {
+    setSearch('')
+    setIsSearchProductsShow(false)
+    setSearchProducts([])
+    setSearchTimeout(null)
+  }
+
+  const searchProductsRender = searchProducts.map(product => {
+    const productPrice = product.type_id === 'configurable' ? product.extension_attributes.final_price : product.price
+
+    return (
+      <li key={product.sku}>
+        <Link to={`/product/${product.sku}`} className="item" onClick={onProductSearchClick}>
+          <span className="product-image-container" style={{ width: '45px' }}>
+            <span className="product-image-wrapper">
+              <img 
+                className="product-image-photo"
+                src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${product.media_gallery_entries[0].file}`}
+                alt={product.name} 
+              />
+            </span>
+          </span>
+          <span className="product-name">{product.name}</span>
+          <span className="product-price"><strong>${(productPrice || 0).toFixed(2)}</strong></span>
+        </Link>
+      </li>
+    )
+})
 
   const history = useHistory()
 

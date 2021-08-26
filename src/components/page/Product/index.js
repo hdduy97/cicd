@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import "react-responsive-carousel/lib/styles/carousel.min.css"
+import { Carousel } from 'react-responsive-carousel'
 
 import { SHOW_LOADING, HIDE_LOADING, ADD_GLOBAL_MESSAGE, SET_QUOTE_ID, TRIGGER_RELOAD, SET_GUEST_CART_ID } from '../../../reducers/types'
 
@@ -74,6 +76,17 @@ const Index = () => {
       </div>
     )
   })
+
+  const productImagesRender = (product.media_gallery_entries || []).map(image => (
+    <div key={image.id}>
+      <img
+        src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${image.file}`}
+        alt={`${product.name}`}
+        width="100%"
+        height="auto"
+      />
+    </div>
+  ))
 
   const addToCart = async (e) => {
     e.preventDefault()
@@ -157,14 +170,9 @@ const Index = () => {
   return (
     <div>
       <div className="product-information">
-        <div className="product-thumnail">
-          <img
-            src={`${process.env.REACT_APP_PRODUCT_IMAGE}/${product.media_gallery_entries[0].file}`}
-            alt={`${product.name}`}
-            width="100%"
-            height="auto"
-          />
-        </div>
+        <Carousel>
+          {productImagesRender}
+        </Carousel>
         <div className="product-info-main">
           <h1 className="product-name">{product.name}</h1>
           <div className="product-info-price">
